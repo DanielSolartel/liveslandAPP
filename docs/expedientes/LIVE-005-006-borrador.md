@@ -19,22 +19,23 @@ Antes de cualquier envío, el promotor debe revisar este borrador y completar lo
 
 ## 2. Circuito que se somete a consulta
 
-Según la definición [v0.33](../producto/proyecto-live-definicion-v0.33.md), §1 y «Recorrido económico deseado». Entre corchetes, la categoría vigente en la v1.2.
+Según la definición [v0.33](../producto/proyecto-live-definicion-v0.33.md), §1 y «Recorrido económico deseado». La tercera columna recoge decisiones confirmadas [RC], salvo lo marcado como visión del promotor; la cuarta, la categoría vigente en la v1.2.
 
-| # | Tramo | Qué pide la v0.33 [RC] | Estado (v1.2) |
+| # | Tramo | Qué pide la v0.33 | Estado (v1.2) |
 | --- | --- | --- | --- |
 | 1 | Registro | Espectadores con mayoría de edad verificada al registrarse | Evidencia insuficiente, sin incompatibilidad identificada |
-| 2 | Recarga | Dinero (COP) → monedas compradas | Evidencia insuficiente: ningún proveedor con aceptación acreditada |
-| 3 | Consumo | Monedas → regalos a creadores, intervalos de salas, publicaciones y suscripciones (estas dos, solo con saldo interno) | Pagos: evidencia insuficiente. Consumo: no reverificado |
-| 4 | Casino | Monedas compradas y publicitarias → apuestas en dados y juegos rápidos, tragamonedas y ruleta, con anfitrión social o sin él, desde el lanzamiento | Ruta condicionada para el casino con concesión o socio; evidencia insuficiente para el uso de monedas y para el plazo |
-| 5 | Ganancias | Uso interno sin retiro al banco del jugador: nuevas apuestas, regalos, intervalos, publicaciones y suscripciones | Sin retiro: incompatibilidad documentada provisional en el régimen estudiado. Uso en regalos o contenido: evidencia insuficiente |
-| 6 | Creador | Ingreso por regalos y contenido; solicitudes diarias de retiro con saldo mínimo; residentes en CO, US, ES y VE | Evidencia insuficiente |
+| 2 | Recarga | Dinero → monedas compradas. Colombia es el primer mercado de recargas; moneda y equivalencias pendientes | Evidencia insuficiente: ningún proveedor con aceptación acreditada |
+| 3 | Consumo | Monedas → regalos a creadores, intervalos de salas, publicaciones y suscripciones (estas dos, solo con saldo interno). Renovación de intervalos manual o automática con autorización. En el modo suma, el aporte que no alcanza el precio y el crédito excedente al cerrar quedan como regalo al creador. Comisión de plataforma sobre regalos y acceso, sin porcentaje fijado | Pagos: evidencia insuficiente. Reglas de consumo: no reverificadas |
+| 4 | Casino | Monedas compradas y publicitarias → apuestas en dados y juegos rápidos, tragamonedas y ruleta, con anfitrión social o sin él, desde el lanzamiento | Tragamonedas, ruleta y premio inmediato: ruta condicionada (concesión o socio). Dados, casino desde el lanzamiento, casino dentro del sitio de LIVE en la ruta B y uso de monedas: evidencia insuficiente |
+| 5 | Ganancias | Uso interno sin retiro al banco del jugador: nuevas apuestas, regalos, intervalos, publicaciones y suscripciones | Sin retiro: incompatibilidad documentada provisional en el régimen estudiado, si el modelo queda clasificado en él (Q2). Uso en regalos o contenido: evidencia insuficiente |
+| 6 | Creador (piloto) | Ingreso por regalos y contenido; solicitudes diarias de retiro con saldo mínimo. Creadores del piloto residentes en CO, US, ES y VE, con alta por invitación y revisión previa | Evidencia insuficiente |
 | 7 | Aporte directo | Dinero por un pago independiente hasta el banco del creador | Evidencia insuficiente |
-| 8 | Anfitrión | Remuneración deseada: porcentaje de lo apostado, fórmula pendiente | No reverificado |
-| 9 | Campañas | Tareas con QR en Bogotá y Medellín, pagadas en dinero o monedas a elección del participante; monedas publicitarias usables en regalos, casino, intervalos, publicaciones y suscripciones | Dinero: fuera del régimen de juego salvo excepciones [RP]. Monedas en el casino: evidencia insuficiente |
-| 10 | Devoluciones | Proporcionales en monedas al cerrar el directo o al expulsar sin infracción comprobada; financiación compartida entre plataforma y creador | No reverificado |
-| 11 | Directos | Un creador por transmisión; grabación opcional del creador publicable en su perfil; multistream a BuzzCast, TikTok Live y Bigo Live desde un celular, cerrado al pasar a sala exclusiva | Ver v1.2, §2.1 |
-| 12 | Administración | Solo el promotor administra y revisa reportes; atención humana según su disponibilidad; cada creador y sus moderadores designados moderan su sala | Evidencia insuficiente |
+| 8 | Anfitrión | Visión del promotor, no decisión cerrada: remuneración con un porcentaje de lo apostado; fórmula y admisibilidad pendientes | No reverificado |
+| 9 | Campañas | Tareas con QR en Bogotá y Medellín: pago base por tarea más bono por usuario captado (registro y verificación) o creador captado (identidad verificada y perfil aprobado), en dinero o monedas a elección del participante. Monedas publicitarias usables en regalos, casino, intervalos, publicaciones y suscripciones | Dinero y monedas en regalos y acceso: evidencia insuficiente (Q22). Monedas en el casino: evidencia insuficiente (Q6) |
+| 10 | Devoluciones | Al cerrar el directo: devolución proporcional en monedas, financiada entre plataforma y creador (fórmula pendiente). Al expulsar sin infracción comprobada por la plataforma tras revisar pruebas: devolución proporcional; forma de liquidación y financiación pendientes | No reverificado |
+| 11 | Directos | Un creador por transmisión; grabación opcional del creador publicable en su perfil; en el piloto, multistream a BuzzCast, TikTok Live y Bigo Live desde un solo celular, que se cierra al pasar a sala exclusiva | Ver v1.2, §2.1 |
+| 12 | Administración (piloto) | Durante el piloto, solo el promotor administra y revisa reportes; atención humana según su disponibilidad; cada creador y sus moderadores designados moderan su sala, además de la supervisión general de la plataforma | Evidencia insuficiente |
+| 13 | Capacidad del piloto | Hasta 5 creadores y 50 espectadores simultáneos en total (no por sala); más de 8 h diarias con al menos un directo | Infraestructura: ruta condicionada |
 
 Rutas del casino: **A**, LIVE como concesionaria de Coljuegos; **B**, un operador autorizado como socio. Ninguna está elegida.
 
@@ -50,20 +51,24 @@ Rutas del casino: **A**, LIVE como concesionaria de Coljuegos; **B**, un operado
 | Q6 | ¿Puede un concesionario otorgar bonos como contrapartida de tareas publicitarias ajenas al juego? Si no, ¿existe otra figura admisible para que la remuneración elegida en monedas se use en el casino? ¿Está expedida la Res. 20250022644 y con qué tope? | Abogado de juego | Art. 1.1.3 [EB]; circuito, tramo 9 | Monedas publicitarias en el casino |
 | Q7 | ¿Se aplica el 1 % sobre el fijo? ¿Cuándo se causa la retención si el jugador no retira? ¿Qué tributos asume LIVE en la ruta B? ¿Hubo fallo sobre el DL 0240/2026? ¿Qué régimen rige en 2027? | Tributarista | v1.1, §5.1 (cálculos) | Capital y costos de la ruta A |
 | Q8 | ¿Es admisible remunerar a un anfitrión con un porcentaje de lo apostado? ¿Qué partes de la Res. 19054/2023 siguen vigentes? ¿Qué rige para anfitriones residentes en España y EE. UU.? | Abogado de juego y publicidad | Res. 19054/2023 [EB]; suspensión parcial conocida solo por prensa | Tramo 8 |
-| Q9 | ¿Constituyen las monedas, con devolución proporcional en monedas, y los saldos de creadores pendientes de pago captación, depósito electrónico o recaudo para terceros? | Abogado financiero | Normas citadas en la v1.1, Q9, no reverificadas | Tramos 2, 6 y 10 |
+| Q9 | ¿Constituyen las monedas, con devolución proporcional en monedas, y los saldos de creadores pendientes de pago captación, depósito electrónico o recaudo para terceros? | Abogado financiero | Conceptos de la SFC y de Supersociedades sobre captación [EB] (v1.1, R01G-03); otras normas citadas en la v1.1, Q9, no reverificadas | Tramos 2, 6 y 10 |
 | Q14 | (a) ¿A qué sujetos obliga el Decreto 0769/2026 y desde cuándo? ¿Alcanza a un servicio web de contenido sexual explícito entre adultos? (b) ¿Qué métodos se consideran «acordes con el riesgo» para verificar a los espectadores al registrarse? (c) ¿Qué datos pueden conservarse y durante cuánto tiempo según la Ley 1581/2012 y las instrucciones de la SIC? (d) ¿Cómo se concilia con la verificación de creadores y personas que aparecen (SPME §9.4.1) y con la identificación del jugador del casino (arts. 1.5.2 y 1.5.5; SIPLAFT)? | Abogado de datos y menores | Decreto 0769/2026, art. 2.2.31.2.6 lit. c), compilación de MinTIC [AG]; Ley 2489/2025 (prensa y extractos de R01) | Método y proveedor de verificación |
 | Q15 | ¿Qué obligaciones imponen la Ley 679/2001, el Decreto 1524/2002 y las normas posteriores a un servicio web de contenido sexual explícito entre adultos? | Abogado de datos y menores | Ninguna reverificada | Contenido explícito |
-| Q16 | ¿Cumplen la Ley 1480/2011 el pago de contenido solo con saldo interno, las pausas, la reconexión, las devoluciones proporcionales en monedas y la expulsión con revisión? | Abogado de consumo | Reglas de la v0.33 | Tramos 3 y 10 |
+| Q16 | ¿Cumplen la Ley 1480/2011 el pago de contenido solo con saldo interno, la renovación automática, las pausas, la reconexión, el aporte parcial y el crédito excedente que quedan como regalo al creador, las devoluciones proporcionales en monedas al cerrar y la devolución al expulsar? | Abogado de consumo | Reglas de la v0.33 | Tramos 3 y 10 |
 | Q17 | ¿Qué permisos de publicidad exterior y de tratamiento de imágenes de transeúntes exigen Bogotá y Medellín para las tareas con QR y el cartel con video continuo? | Abogado; consulta municipal | Reglas de campaña de la v0.33 | Tramo 9 |
+| Q19 | ¿Qué retenciones, tributos y obligaciones de información se aplican a los pagos a creadores residentes en CO, US, ES y VE, con solicitudes diarias de retiro? | Tributarista | Tramo 6 | Retiros de creadores |
+| Q20 | ¿Qué sanciones o restricciones afectan a pagar a creadores residentes en Venezuela? ¿Cómo se delimita el territorio de los jugadores del casino frente a la residencia de los creadores y anfitriones? | Abogado de juego y de comercio internacional | Tramos 4, 6 y 8 | P6, P8 |
+| Q21 | ¿Qué exige la Ley 1581/2012 para grabar, conservar y publicar directos con contenido sexual explícito, tanto por el creador como por un proveedor técnico, incluidas las personas que aparecen? | Abogado de datos | Cloudflare [AG] sobre grabación y retención; tramo 11 | Grabación del creador; grabación técnica |
+| Q22 | ¿Queda fuera del régimen de juego la remuneración de las campañas en dinero, y el uso de monedas publicitarias en regalos y acceso? ¿Cuándo se aplican los arts. 5 y 31 de la Ley 643 y la Res. 19054/2023 a tareas o bonos de captación en una plataforma con casino? | Abogado de juego y publicidad | Res. 19054/2023 y Ley 643 [EB]; inferencia de la v1.1 (R01B-18) | Tramo 9 |
 
-Q14 ya no supone un «método exigido» por el decreto. Q15 a Q17 son nuevas: cubren requisitos que ninguna revisión reverificó.
+Q14 ya no supone un «método exigido» por el decreto. Q15 a Q17 y Q19 a Q22 son nuevas: cubren requisitos que ninguna revisión reverificó o inferencias pendientes de dictamen.
 
 ## 4. LIVE-006: proveedores
 
 | # | Pregunta | Destinatario | Evidencia que se adjunta |
 | --- | --- | --- | --- |
 | Q10 | (a) ¿Cómo debe acreditar el comercio los controles de la SPME §9.4.1: registro, acuerdos y consentimiento, verificación de creadores y personas que aparecen, revisión previa, control del directo y quejas en siete días hábiles? (b) ¿Acepta detección automática con corte inmediato y escalado humano, o exige vigilancia humana continua? ¿Qué guardia mínima? (c) ¿Cuentan los moderadores designados por los creadores? (d) ¿Qué exige para las grabaciones publicadas? (e) ¿Qué exige Visa para la misma actividad? | Adquirentes o procesadores que admitan contenido adulto declarado | SPME §9.4.1 (04-08-2026) [AG]; diseño de moderación cuando exista |
-| Q11-S | Stripe: (a) ¿qué entidad y qué términos regionales rigen para una operadora constituida en el país de P6? (b) ¿Concede la preaprobación escrita del SSA §1.2(a)(ix) por tramo: cobro de monedas (contenido adulto, y juego si las monedas sirven en el casino), aportes directos y pago a creadores? (c) ¿Admite Global Payouts hacia CO, US, ES y VE para esta actividad? | Stripe | *Restricted Businesses* y SSA [AG]; Global Payouts [EB] |
+| Q11-S | Stripe: (a) ¿qué entidad y qué términos regionales rigen para una operadora constituida en el país de P6? (b) ¿Concede la preaprobación escrita del SSA §1.2(a)(ix) por tramo: cobro de monedas que, según la v0.33, se usan en contenido adulto y en el casino (se declaran ambas actividades), aportes directos y pago a creadores? (c) ¿Admite Global Payouts hacia CO, US, ES y VE para esta actividad? | Stripe | *Restricted Businesses* y SSA [AG]; Global Payouts [EB] |
 | Q11-P | Payoneer: (a) ¿alcanza la nota final de la lista a los servicios adultos o a los juegos de azar, y en qué condiciones? (b) ¿Qué entidad y qué producto aplican? (c) ¿Puede pagar a creadores residentes en CO, US, ES y VE? | Payoneer | *Prohibited transaction list* [AG] |
 | Q11-O | Para cada tramo, con la actividad declarada: ¿acepta el cobro de monedas, los aportes directos o el pago a creadores? ¿Con qué entidad contratante y qué vinculación (SARLAFT) de la operadora? | Wise, Bold, adquirentes adultos, bancos colombianos | Ninguna reverificada |
 | Q12 | ¿Acepta por escrito contenido sexual explícito legal entre adultos, la grabación técnica y la grabación que publique el creador? ¿Con qué retención y borrado? ¿Cómo se factura la entrega WebRTC? | Cloudflare, AWS IVS, LiveKit, alojamiento propio | *Start a live stream* y *Pricing* de Cloudflare [AG] |
@@ -78,14 +83,14 @@ No se envían a terceros. Son decisiones o datos que condicionan las preguntas.
 | --- | --- | --- |
 | P2 | Capital disponible; si se pide cotización a operadores para la ruta B | Q7; viabilidad de la ruta A |
 | P5 | Horas semanales y franjas que el promotor puede declarar. Las 20, 40 y 60 h de la v1.1 son supuestos de cálculo | Q10 |
-| P6 | País de constitución de la operadora (la empresa aún no existe) | Q11, Q14; fiscalidad |
+| P6 | País de constitución de la operadora (la empresa aún no existe) | Q11, Q14, Q19 y Q20; fiscalidad |
 | P7 | Tratamiento de las monedas publicitarias en el casino mientras Q6 esté pendiente. El bono del concesionario es una hipótesis evaluada, no una vía acreditada ni la única | Q6 |
-| P8 | Anfitriones del casino residentes fuera de Colombia | Q8 |
+| P8 | Anfitriones del casino residentes fuera de Colombia | Q8 y Q20 |
 | — | Volúmenes: ocupación media, horas y días de directo, proporción de grabaciones publicadas | Q10, Q12 y costos |
-| — | Grabación técnica del proveedor: sí o no | Q12; dictamen de datos |
+| — | Grabación técnica del proveedor: sí o no | Q12 y Q21 |
 
 La decisión sobre el retiro del jugador (P1a de la v1.1) depende de Q2 y se formula después de su respuesta, dentro del régimen y del modelo clasificados. La arquitectura de saldos conserva el uso de ganancias pedido por el promotor como requisito pendiente de viabilidad.
 
 ## 6. Fuentes por obtener en versión oficial
 
-Las URL y fechas de los extractos de R01 están en la v1.1, §12. Las fuentes leídas por ChatGPT figuran con su enlace en el encargo R02 (líneas 43–45, 53, 61–63, 71–73, 81–82 y 112). Ninguna se adjunta como leída por Claude.
+Las URL y fechas de los extractos de R01 están en la v1.1, §12. Las fuentes leídas por ChatGPT figuran con su enlace en el encargo R02 (líneas 43–45, 53, 61–63, 71–73, 81–82 y 112); sus cálculos reproducidos, en §5 (líneas 140–151). Ninguna se adjunta como leída por Claude.

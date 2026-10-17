@@ -18,7 +18,7 @@ Plataforma de transmisiones en vivo y monetización de creadores, con contenido 
 | `docs/producto/` | Definición del producto (copia fiel, con SHA-256) |
 | `docs/encargos/` | Encargos originales LIVE-001, R01 y R02 (copias fieles, con SHA-256) |
 | `docs/investigacion/` | Informes v1.0 y v1.1 (históricos), v1.2 (vigente) y registros de correcciones |
-| `docs/expedientes/` | Borrador de expedientes LIVE-005 y LIVE-006 (preparado, no enviado) |
+| `docs/expedientes/` | Borradores de alcance de LIVE-002 y de expedientes LIVE-005 y LIVE-006 (preparados, no enviados) |
 | `docs/estado/` | Estado del proyecto |
 
 Ningún informe sustituye la validación profesional ni la aceptación escrita de proveedores.
