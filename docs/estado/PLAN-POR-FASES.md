@@ -1,14 +1,20 @@
-# Plan por fases y flujo de entrega — v1.0
+# Plan por fases y flujo de entrega — v1.1
 
 | Campo | Valor |
 | --- | --- |
-| Versión | 1.0 |
-| Origen | Entrega LIVE-FASE01-E01 v1.0, encargo del 17-10-2026 (America/Bogota), apartados 1 a 5. El encargo ejecutable no se copia en el repositorio |
-| Base comprobada | `7184f7ca87d51bdba5e21c8e4d29df14025e6b46` |
+| Versión | 1.1 |
+| Fase activa | **FASE-02, viabilidad y decisiones del piloto** |
+| Entrega activa | LIVE-FASE02-E01, [ficha del promotor](../expedientes/LIVE-FASE02-E01-ficha-promotor.md) (única entrega activa) |
 | Definición de producto | [v0.33](../producto/proyecto-live-definicion-v0.33.md) |
 | Síntesis de investigación | [LIVE-001-resultado-v1.2](../investigacion/LIVE-001-resultado-v1.2.md) |
-| Fase activa | **FASE-01, cierre de investigación documental** |
 | Estado del proyecto | [ESTADO-PROYECTO](ESTADO-PROYECTO.md) |
+
+Historial del plan:
+
+| Versión | Entrega | Base | Cambio |
+| --- | --- | --- | --- |
+| 1.0 | LIVE-FASE01-E01 v1.0, encargo del 17-10-2026 (America/Bogota), apartados 1 a 5. El encargo ejecutable no se copia en el repositorio | `7184f7ca87d51bdba5e21c8e4d29df14025e6b46` | Creación del plan |
+| 1.1 | LIVE-FASE02-E01 v1.0, encargo del 17-10-2026 | `95bc81cb94d28c3b9d03e8696be454898749e5f0` | Solo metadatos y estados: FASE-01 cerrada; FASE-02 activa con LIVE-FASE02-E01 como única entrega activa |
 
 ## 1. Cambio de forma de trabajo
 
@@ -24,8 +30,8 @@ Las fases agrupan objetivos. Cada fase tendrá entregas pequeñas, con alcance p
 
 | Fase | Objetivo | Alcance | Criterio de cierre | Estado |
 | --- | --- | --- | --- | --- |
-| FASE-01 | Cierre de investigación documental | Congelar la v1.2 como síntesis de esta etapa, trasladar los pendientes externos y ordenar el trabajo. | Paquete de cierre auditado, aplicado y publicado manualmente por el usuario. No exige demostrar viabilidad legal. | ACTIVA: en cierre |
-| FASE-02 | Viabilidad y decisiones del piloto | Resolver el circuito económico, la ruta del casino, empresa, pagos, territorios, recursos y operación con respuestas profesionales o contractuales concretas. | Ruta documentada y decisión del usuario: viable, requiere cambios o bloqueada. No se inventa aceptación para avanzar. | Pendiente |
+| FASE-01 | Cierre de investigación documental | Congelar la v1.2 como síntesis de esta etapa, trasladar los pendientes externos y ordenar el trabajo. | Paquete de cierre auditado, aplicado y publicado manualmente por el usuario. No exige demostrar viabilidad legal. | Cerrada el 17-10-2026; publicada manualmente en `95bc81cb94d28c3b9d03e8696be454898749e5f0` |
+| FASE-02 | Viabilidad y decisiones del piloto | Resolver el circuito económico, la ruta del casino, empresa, pagos, territorios, recursos y operación con respuestas profesionales o contractuales concretas. | Ruta documentada y decisión del usuario: viable, requiere cambios o bloqueada. No se inventa aceptación para avanzar. | ACTIVA: entrega LIVE-FASE02-E01 |
 | FASE-03 | Prueba técnica móvil | Comprobar captura, multistream, chat/regalos, reconexión y transición a exclusivo con contenido neutral. | Resultados reproducibles en equipos y cuentas autorizados, con límites y fallos conocidos; los obstáculos vuelven a una decisión explícita. | Pendiente |
 | FASE-04 | Diseño funcional y experiencia | Concretar pantallas, reglas de intervalos, perfiles, devoluciones, permisos y contratos entre módulos. | Prototipo y reglas de aceptación revisados; detalles propuestos diferenciados de decisiones confirmadas. | Pendiente |
 | FASE-05 | Base técnica y seguridad | Preparar arquitectura, proyecto, datos, cuentas, roles, verificación y registro de operaciones. | Base ejecutable y controles esenciales comprobados; integraciones de prueba donde corresponda. | Pendiente |

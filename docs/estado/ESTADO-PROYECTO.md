@@ -1,13 +1,13 @@
 # Estado del proyecto LIVE
 
-Actualizado el 17-10-2026, entrega LIVE-FASE01-E01 (anterior: 16-10-2026, encargo LIVE-001-R02). Es el punto de entrada para saber qué está vigente, qué es historial y qué falta. El orden de trabajo y el flujo de publicación están en el [plan por fases](PLAN-POR-FASES.md).
+Actualizado el 17-10-2026, entrega LIVE-FASE02-E01 (anteriores: LIVE-FASE01-E01, 17-10-2026, y encargo LIVE-001-R02, 16-10-2026). Es el punto de entrada para saber qué está vigente, qué es historial y qué falta. El orden de trabajo y el flujo de publicación están en el [plan por fases, v1.1](PLAN-POR-FASES.md).
 
 ## 1. Etapa actual
 
-- **Fase activa: FASE-01, cierre de investigación documental, en cierre.** Se cierra cuando el paquete de cierre esté auditado, aplicado y publicado manualmente por el usuario. **La publicación manual está pendiente.**
-- **Investigación documental consolidada** en [LIVE-001-resultado-v1.2](../investigacion/LIVE-001-resultado-v1.2.md), que queda como síntesis de esta etapa y sigue **provisional** en las materias jurídicas y contractuales. «Consolidada» no significa que los pendientes de LIVE-001 estén resueltos ni que el modelo esté aprobado: esas cuestiones pasan a FASE-02.
-- **FASE-02 (viabilidad y decisiones del piloto) no se ha iniciado.** Empezará con un encargo explícito del usuario después del cierre de FASE-01.
-- **LIVE-002 está pausado**, y LIVE-005 y LIVE-006 no se ejecutan ahora. Sus borradores se conservan como entradas de fases posteriores, **preparados y no enviados**. No ha habido contacto con terceros.
+- **FASE-01, cierre de investigación documental: cerrada.** El paquete LIVE-FASE01-E01 se auditó y el usuario lo publicó manualmente en el commit `95bc81cb94d28c3b9d03e8696be454898749e5f0` (17-10-2026). Según el encargo LIVE-FASE02-E01, la auditoría y la comprobación en GitHub confirmaron que sus tres archivos son idénticos a los auditados; Claude comprobó además que coinciden byte a byte con el paquete entregado.
+- **Fase activa: FASE-02, viabilidad y decisiones del piloto.** Única entrega activa: LIVE-FASE02-E01, [ficha del promotor](../expedientes/LIVE-FASE02-E01-ficha-promotor.md), **preparada y pendiente de respuestas del promotor, auditoría y publicación manual**. FASE-02 no está cerrada.
+- **Investigación documental consolidada** en [LIVE-001-resultado-v1.2](../investigacion/LIVE-001-resultado-v1.2.md), síntesis de FASE-01, que sigue **provisional** en las materias jurídicas y contractuales. Sus pendientes no están resueltos ni hay aceptación de proveedores: se tratan en FASE-02.
+- **LIVE-002 sigue pausado** para FASE-03. LIVE-005 y LIVE-006 no se ejecutan ni se envían en esta entrega; sus borradores se conservan, **preparados y no enviados**. No ha habido contacto con terceros.
 - La aplicación **no está implementada**: no hay código, infraestructura, cuentas de pago ni publicación web.
 - «LIVE» es un identificador provisional, no el nombre comercial.
 
@@ -23,7 +23,8 @@ La v0.33 es la base de requisitos y **sus decisiones siguen vigentes**. Los info
 
 | Documento | Papel | Estado |
 | --- | --- | --- |
-| [Plan por fases](PLAN-POR-FASES.md) | Fases, reglas de secuencia y flujo de entrega con publicación manual | v1.0 (LIVE-FASE01-E01) |
+| [Plan por fases](PLAN-POR-FASES.md) | Fases, reglas de secuencia y flujo de entrega con publicación manual | v1.1 (LIVE-FASE02-E01); v1.0 publicada en `95bc81c` |
+| [Ficha del promotor](../expedientes/LIVE-FASE02-E01-ficha-promotor.md) | Datos confirmados, pendientes y primer bloque de tres preguntas al promotor | Preparada; pendiente de respuestas, auditoría y publicación manual |
 | [LIVE-001-resultado-v1.2](../investigacion/LIVE-001-resultado-v1.2.md) | **Síntesis vigente** de conclusiones, evidencia, cálculos y pendientes; síntesis de FASE-01 | Consolidada; provisional en lo jurídico y contractual |
 | [Registro R02](../investigacion/LIVE-001-R02-registro-correcciones.md) | Correcciones v1.1 → v1.2, procedencia y accesos de R02 | Vigente |
 | [Borrador LIVE-005 y LIVE-006](../expedientes/LIVE-005-006-borrador.md) | Circuito, preguntas, evidencia por adjuntar y datos que faltan | Preparado, no enviado; entrada de FASE-02 |
@@ -128,9 +129,9 @@ Las sumas completas están en el `SHA256SUMS` de cada carpeta ([encargos](../enc
 
 La arquitectura de saldos debe conservar el uso de ganancias que pidió el promotor como requisito pendiente de viabilidad.
 
-## 7. Pendientes trasladados a FASE-02
+## 7. Pendientes de FASE-02
 
-Siguen abiertos; FASE-01 no los resuelve. Detalle y orden en la [v1.2, §5](../investigacion/LIVE-001-resultado-v1.2.md#5-pendientes-priorizados).
+Siguen abiertos; FASE-01 no los resolvió. Detalle y orden en la [v1.2, §5](../investigacion/LIVE-001-resultado-v1.2.md#5-pendientes-priorizados).
 
 1. Texto y vigencia de las reglas de retiro y bonos: cotejo con el Diario Oficial y anexo del Acuerdo 01/2026.
 2. Clasificación jurídica del circuito completo de la v0.33.
@@ -141,20 +142,21 @@ Siguen abiertos; FASE-01 no los resuelve. Detalle y orden en la [v1.2, §5](../i
 7. Capital, impuestos y garantías de una concesión propia, que siguen provisionales.
 8. Cotejo propio de las fuentes leídas por ChatGPT. Requiere ampliar el acceso de red del entorno.
 
-Las pruebas técnicas del punto 6 corresponden a FASE-03. Los datos que piden los borradores (país de constitución, capital, franjas de atención y cambios de monedas) son datos y decisiones de FASE-02; no se resuelven en FASE-01.
+Las pruebas técnicas del punto 6 corresponden a FASE-03. Los datos que piden los borradores (país de constitución, capital, franjas de atención y cambios de monedas) son datos y decisiones de FASE-02. La [ficha del promotor](../expedientes/LIVE-FASE02-E01-ficha-promotor.md) los ordena y separa lo que depende de profesionales o proveedores.
 
 ## 8. Siguiente paso
 
-Sustituye el orden anterior, que proponía encargos en paralelo. Se sigue el [plan por fases](PLAN-POR-FASES.md): una fase activa y una entrega activa.
+Se sigue el [plan por fases](PLAN-POR-FASES.md): una fase activa y una entrega activa.
 
-1. **Cerrar FASE-01.** ChatGPT audita el paquete de la entrega LIVE-FASE01-E01; el usuario lo aplica, hace commit y push, y se verifica el SHA publicado.
-2. **FASE-02, solo con un encargo explícito del usuario** tras ese cierre. Requiere respuestas concretas, dictámenes, condiciones y decisiones, no otra ronda de informes. Sus entradas son los pendientes de §7 y el [borrador de expedientes LIVE-005 y LIVE-006](../expedientes/LIVE-005-006-borrador.md).
-3. **LIVE-002 sigue pausado** hasta FASE-03. Su [borrador de alcance](../expedientes/LIVE-002-alcance-borrador.md) se conserva sin cambios.
+1. **Publicar LIVE-FASE02-E01.** ChatGPT audita el paquete; el usuario lo aplica, hace commit y push, y se verifica el SHA publicado.
+2. **Respuestas del promotor** al primer bloque de tres preguntas de la [ficha](../expedientes/LIVE-FASE02-E01-ficha-promotor.md#3-primer-bloque-de-preguntas-al-promotor). «Sin definir» es una respuesta válida.
+3. **Siguiente entrega de FASE-02, solo con un encargo explícito del usuario.** Delimitaría una consulta profesional prioritaria sobre la clasificación del circuito completo (Q2 y sus dependencias). No está preparada ni lista para envío. FASE-02 requiere respuestas concretas, dictámenes, condiciones y decisiones, no otra ronda de informes. Las demás preguntas siguen en el [borrador de expedientes LIVE-005 y LIVE-006](../expedientes/LIVE-005-006-borrador.md).
+4. **LIVE-002 sigue pausado** hasta FASE-03. Su [borrador de alcance](../expedientes/LIVE-002-alcance-borrador.md) se conserva sin cambios.
 
 Enviar consultas o contactar a terceros requiere el encargo de la fase correspondiente.
 
 ## 9. Repositorio
 
 - Rama de trabajo: `claude/new-session-tzsjwj`. Según el encargo R02, también es la rama predeterminada. No se cambian ahora la rama predeterminada, el nombre de rama, los permisos de GitHub, los correos ni la identidad Git.
-- **Publicación manual.** Desde LIVE-FASE01-E01, Claude entrega un parche y un paquete para auditoría; el usuario aplica, hace commit y push. Claude no hace commit, push ni modificaciones remotas ([plan, §3](PLAN-POR-FASES.md#3-flujo-de-entrega-y-publicación)). Las entregas anteriores, hasta `7184f7c`, se publicaron desde la sesión de Claude con las instrucciones vigentes entonces; ese historial no se reescribe.
+- **Publicación manual.** Desde LIVE-FASE01-E01, Claude entrega un parche y un paquete para auditoría; el usuario aplica, hace commit y push. Claude no hace commit, push ni modificaciones remotas ([plan, §3](PLAN-POR-FASES.md#3-flujo-de-entrega-y-publicación)). Las entregas anteriores, hasta `7184f7c`, se publicaron desde la sesión de Claude con las instrucciones vigentes entonces; ese historial no se reescribe. LIVE-FASE01-E01 se publicó manualmente en `95bc81c`.
 - Carpetas: producto en `docs/producto/`, encargos en `docs/encargos/`, investigación en `docs/investigacion/`, expedientes en `docs/expedientes/` y estado en `docs/estado/`.
