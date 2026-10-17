@@ -42,7 +42,7 @@ Los datos de esa auditoría parafrasean estas líneas del encargo R02:
 - Payoneer: 53;
 - Mastercard: 61–65;
 - MinTIC: 71–73;
-- Cloudflare: 81–82;
+- Cloudflare: 81–82 y 87;
 - Acuerdo 01/2026: 112;
 - cálculos reproducidos: 140–151.
 
@@ -55,7 +55,7 @@ Resumen de la v0.33, §1, tabla «Respuestas confirmadas» y párrafo de la v0.2
 | Mercado y canal | Colombia como primer mercado de recargas y retiros. Web primero; app compatible con las tiendas después, sin equivalencia presupuesta con la web. La empresa aún no existe | App posterior: alcance por definir; replicar en tiendas el contenido explícito no es posible (límite documentado) |
 | Contenido | Se admiten desnudos y contenido sexual explícito | Evidencia insuficiente: normas de contenido no reverificadas (Q15) |
 | Edad | Los espectadores verifican su mayoría de edad durante el registro, antes de usar la plataforma. No basta una declaración. Método y proveedor sin elegir | Evidencia insuficiente, sin incompatibilidad identificada |
-| Casino | Imprescindible desde el lanzamiento con usuarios reales. Dados y juegos rápidos, tragamonedas y ruleta. Con anfitrión social o sin él | Tragamonedas, ruleta y premio inmediato: ruta condicionada (concesión o socio). Dados, «desde el lanzamiento» y casino dentro del sitio de LIVE en la ruta B: evidencia insuficiente |
+| Casino | Imprescindible desde el lanzamiento con usuarios reales. Dados y juegos rápidos, tragamonedas y ruleta. Con anfitrión social o sin él | Tragamonedas, ruleta y premio inmediato: ruta condicionada (concesión o socio; retiro del jugador si el modelo queda clasificado en el régimen, conclusión provisional). Dados, «desde el lanzamiento» y casino dentro del sitio de LIVE en la ruta B: evidencia insuficiente |
 | Ganancias del jugador | Uso interno sin retiro a su banco: nuevas apuestas, regalos, intervalos, publicaciones y suscripciones | Sin retiro: **incompatibilidad documentada provisional** en el régimen estudiado, si el modelo queda clasificado en él (clasificación pendiente, Q2). Uso en regalos o contenido: evidencia insuficiente |
 | Anfitrión | Papel social; el juego funciona automáticamente. Remuneración deseada: porcentaje de lo apostado, con fórmula pendiente (visión del promotor, no decisión cerrada) | No reverificado |
 | Monedas y pagos | Recargas de dinero para monedas. Suscripciones y publicaciones solo con saldo interno. Aportes directos en dinero por un pago independiente | Monedas en el casino y pagos: evidencia insuficiente |
@@ -83,7 +83,7 @@ Las sumas completas están en el `SHA256SUMS` de cada carpeta ([encargos](../enc
 **Originales ausentes:**
 
 - Versiones v0.1 a v0.32 de la definición. Solo constan en el registro de cambios de la v0.33 (§11).
-- Encargos LIVE-002, LIVE-003 y LIVE-004 como archivos independientes. Solo existen como borradores sin número de versión dentro de la v0.33 (§8 a §10), sujetos al resultado de LIVE-001.
+- Encargos LIVE-002, LIVE-003 y LIVE-004 como archivos independientes. Solo existen como borradores sin número de versión dentro de la v0.33 (§8 a §10), sujetos al resultado de LIVE-001. Para LIVE-002 hay además el [borrador de alcance](../expedientes/LIVE-002-alcance-borrador.md), preparado y no ejecutado, que no sustituye al de la v0.33, §8.
 - Encargos LIVE-005, LIVE-006 y LIVE-007. No existen: fueron propuestos en la v1.0 (§11). Para LIVE-005 y LIVE-006 solo hay el borrador de expedientes.
 - Texto completo de la auditoría de ChatGPT y de su revisión preliminar de R01. Solo se conoce su resumen dentro de los encargos R01 y R02.
 

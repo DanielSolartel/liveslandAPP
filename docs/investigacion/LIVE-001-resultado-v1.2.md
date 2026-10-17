@@ -5,7 +5,7 @@
 | Encargo | LIVE-001-R02 — Cierre documental y consolidación de evidencia — v1.0 ([copia](../encargos/LIVE-001-R02-cierre-documental-v1.0.md)) |
 | Base de requisitos | [Definición v0.33](../producto/proyecto-live-definicion-v0.33.md). Sus decisiones siguen vigentes |
 | Estado | **Provisional** en las materias jurídicas y contractuales abiertas. LIVE-001 no está cerrado |
-| Evidencia | Extractos de buscador del 10-10-2026 (R01) y auditoría de ChatGPT recogida en el encargo R02, fechado el 10-10-2026 (la fecha de consulta de ChatGPT no consta). Redacción: 16-10-2026 |
+| Evidencia | Extractos de buscador de R01 (10-10-2026); fuentes de la v1.0 no reverificadas, como antecedente; auditoría de ChatGPT recogida en el encargo R02 del 10-10-2026 (fecha de consulta no consignada). Redactada el 16 y 17-10-2026 |
 
 > Este documento sustituye a la v1.0 y a la v1.1 **solo** como fuente de las conclusiones vigentes. No es asesoría jurídica, contable ni financiera, ni sustituye la validación profesional o la aceptación escrita de proveedores. Separar el casino, permitir retiros al jugador o limitar usos del saldo son propuestas que el promotor **no ha elegido**.
 
@@ -38,7 +38,7 @@ Una inferencia jurídica pendiente de dictamen nunca se clasifica como incompati
 3. **Monedas publicitarias en el casino.** El bono del concesionario es una **hipótesis evaluada**, pendiente de confirmar para remunerar tareas publicitarias externas. No es una vía acreditada ni la única posibilidad jurídica.
 4. **Stripe [AG].** Prohibición del contenido adulto y del casino en la política pública. Excepción general mediante preaprobación escrita en el contrato (SSA §1.2(a)(ix)). Ninguna aceptación acreditada para LIVE: evidencia insuficiente. Treasury, producto para empresas sin cuentas de consumidores, no prueba una billetera de consumidores.
 5. **Payoneer [AG].** Prohibición de los servicios adultos y los juegos de azar en la lista pública. Su nota final permite preaprobar algunas actividades de la lista tras revisión discrecional; R02 no indica cuáles. Ninguna aceptación acreditada: evidencia insuficiente.
-6. **Mastercard [AG].** Hay evidencia del cuerpo de la §9.4.1 de la SPME (04-08-2026). Sus controles no fijan plantilla ni demuestran que una automatización concreta cumpla. La administración única sigue en evidencia insuficiente por diseño, pruebas y condiciones del adquirente. Visa: sin evidencia reverificada.
+6. **Mastercard [AG].** Hay evidencia del cuerpo de la SPME §9.4.1 (04-08-2026). Sus controles no fijan plantilla ni demuestran que una automatización concreta cumpla. La administración única sigue en evidencia insuficiente por diseño, pruebas y condiciones del adquirente. Visa: sin evidencia reverificada.
 7. **Edad [AG].** Según ChatGPT, el Decreto 0769/2026 (art. 2.2.31.2.6 lit. c) contempla una verificación acorde con el riesgo y minimización estricta de datos; los sujetos obligados no están identificados. Se mantiene la decisión del promotor de verificar la mayoría de edad al registrarse, sin incompatibilidad identificada.
 8. **Grabación en Cloudflare.** La grabación técnica es una decisión pendiente de privacidad y arquitectura, no una incompatibilidad demostrada. El almacenamiento se contrata por bloques [AG]: como capacidad nueva aislada al mes, las publicadas a 12 h cuestan US$55 (no 54) y el cartel, US$15 (no 12) [AG], con los supuestos del 10 % y de 20 × 2 h [Supuesto]. Las publicadas se acumulan; con capacidad compartida, el incremento es de US$50–55 y US$10–15 (cálculo propio).
 9. **Carga humana.** Las 20, 40 y 60 h semanales son **supuestos**: el promotor solo confirmó atención según su disponibilidad, sin horario fijo. La guardia es la mayor demanda solo en el cálculo que excluye la revisión de grabaciones publicadas y otros volúmenes no definidos; con esa revisión no hay dominancia general (§4).
@@ -58,9 +58,9 @@ Una inferencia jurídica pendiente de dictamen nunca se clasifica como incompati
 | Casino desde el lanzamiento | **Evidencia insuficiente** | Plazos de concesión, certificación e integración en B sin investigar | Calendario y cotización de un operador; dictamen |
 | Casino dentro del sitio de LIVE en la ruta B | **Evidencia insuficiente** | Ley 643, art. 38: registro «en el sitio o portal autorizado» [EB] | Q5 |
 | Juegos rápidos y dados | Premio inmediato: **ruta condicionada**. Dados: **evidencia insuficiente** | Art. 1.3.12 modificado en 2026, según la réplica de Medellín [EB]; anexo del Ac. 01 sin leer (§3.1) | Anexo y D.O.; Q4 |
-| Recargas de monedas, aportes directos y pagos a creadores en US, ES y VE | **Evidencia insuficiente** | Stripe y Payoneer: prohibición pública y excepción prevista de distinta base, sin aceptación [AG] (§3.2). Wise, Bold, adquirentes adultos y Paxum: no recuperados o no consultados en R01; solo evidencia de la v1.0 | Q11 |
+| Recargas de monedas, aportes directos y pagos a creadores en US, ES y VE | **Evidencia insuficiente** | Stripe y Payoneer: prohibición pública y excepción prevista de distinta base, sin aceptación [AG] (§3.2). Wise, Bold, adquirentes adultos y Paxum: no recuperados o no consultados en R01 (solo v1.0) | Q11 |
 | Pagos a creadores residentes en Colombia | **Evidencia insuficiente** | ACH o Bre-B desde una operadora colombiana: según F40, fuente secundaria de la v1.0 no reverificada | P6; aceptación del banco [CC] |
-| Monedas y saldos de creadores frente al régimen de la SFC | **Evidencia insuficiente** | Conceptos de la SFC y de Supersociedades sobre captación [EB] (R01G-03), sin pronunciamiento sobre monedas de consumo | Q9 |
+| Monedas con devolución en monedas y saldos de creadores pendientes de retiro (régimen de la SFC) | **Evidencia insuficiente** | Conceptos de la SFC y de Supersociedades sobre captación [EB] (R01G-03), sin pronunciamiento sobre monedas de consumo | Q9 |
 | Contenido sexual explícito en la web | **Evidencia insuficiente** | Ley 679/2001 y Decreto 1524/2002 no reverificados; solo se revisaron las condiciones de la SPME §9.4.1 [AG] | Q15; adquirente |
 | Verificar la mayoría de edad al registrarse | **Evidencia insuficiente**, sin incompatibilidad identificada | Decisión del promotor [LC]; Decreto 0769/2026 [AG] | Cotejo; sujetos obligados; SIC; Q14 (método); Q18 (proveedor) |
 | Administración única del piloto; chat según disponibilidad | **Evidencia insuficiente** | SPME §9.4.1 sin plantilla [AG]; horas no declaradas [LC] | LIVE-002; Q10; Visa; P5 |
@@ -69,7 +69,7 @@ Una inferencia jurídica pendiente de dictamen nunca se clasifica como incompati
 | Grabación opcional del creador y su publicación | **Evidencia insuficiente** | Decisión de la v0.33 [LC]. Revisión del contenido antes de publicarlo (SPME §9.4.1) [AG]; su aplicación a las grabaciones y el método [INT] | Q12 [CC]; Q21 [RP]; método de revisión |
 | 5 creadores y 50 espectadores simultáneos en total; más de 8 h diarias (infraestructura) | **Ruta condicionada** [CC] | Tarifas de video por arquitectura [EB, AG] | Egress RTMP; Q12 |
 
-**Límites documentados que no son requisitos del promotor** [EB]: la parte pública enviada a TikTok y Bigo no puede llevar contenido sexual ni promoción del casino (normas comunitarias, versiones 2023–2025), y una app de tienda no puede replicar el contenido explícito de la web (Google Play; Apple 1.1.4). La v0.33 ya pide una app «compatible con las tiendas». Son incompatibilidades documentadas, sujetas a la vigencia de esas políticas.
+**Límites documentados que no son requisitos del promotor** [EB]: la parte pública enviada a TikTok y Bigo no puede llevar contenido sexual ni promoción del casino (normas comunitarias, versiones 2023–2025), y una app de tienda no puede replicar el contenido explícito de la web (Google Play; Apple 1.1.4). La v0.33 ya pide una app «compatible con las tiendas». Se registran como límites, no como incompatibilidad con un requisito de la v0.33, sujetos a la vigencia de esas políticas.
 
 ### 2.2 Requisitos no reverificados
 
@@ -90,7 +90,7 @@ Solo se estudiaron el título 1 del Acuerdo 08/2020 y la Ley 643/2001, en répli
 
 ChatGPT abrió la ficha oficial del Acuerdo 01 de 07-05-2026, publicada el 08-05-2026, pero no pudo leer su anexo; la ficha no permite afirmar el alcance de todos sus artículos [AG]. La réplica de Medellín solo anota un cambio en el art. 1.3.12 [EB], lo que no descarta otros. El Acuerdo 02/2026 y el proyecto 307313 siguen sin identificar.
 
-Un bono por tareas ajenas al juego no encaja literalmente en el art. 1.1.3 [INT], y acreditado como crédito sería premio retirable. Que la remuneración en dinero quede fuera del régimen de juego es una inferencia pendiente de dictamen (Q22), y en cualquier caso no resuelve el uso de las monedas en el casino.
+Un bono por tareas ajenas al juego no encaja literalmente en el art. 1.1.3 [INT], y acreditado como crédito sería premio retirable. La remuneración en dinero (§2.1, Q22) no resuelve el uso de las monedas en el casino.
 
 ### 3.2 Pagos
 
@@ -129,11 +129,11 @@ Se aplica si LIVE acepta Mastercard mediante un adquirente [INT]. Los siete día
 
 **Cloudflare [AG].** *Start a live stream* (07-10-2026): `recording.mode=automatic` habilita la reproducción HLS/DASH y graba; con `off` no graba ni hay esa reproducción; `deleteRecordingAfterDays` admite de 30 a 1.096 días. *Pricing* (08-09-2026): almacenamiento prepagado en bloques de US$5 por 1.000 minutos al mes; anuncia la facturación de la entrega WebRTC desde el 15-10-2026, sin verificar si ya se aplica ni con qué tarifa.
 
-La v0.33 no eligió grabar ni publicar todos los directos: es una opción no seleccionada, no una prohibición [LC]. Se distinguen la grabación técnica del proveedor, la grabación voluntaria del creador y su publicación para seguidores. La técnica obliga a decidir la retención por un tercero de video sexual explícito [RP] y su aceptación por el proveedor [CC].
+Grabar o publicar todos los directos es una opción no seleccionada en la v0.33, no una prohibición [LC]. Se distinguen la grabación técnica del proveedor, la grabación voluntaria del creador y su publicación para seguidores. La técnica obliga a decidir la retención por un tercero de video sexual explícito [RP] y su aceptación por el proveedor [CC].
 
 ## 4. Cálculos corregidos
 
-Recalculados por Claude con un script. R02 solo trae US$55 y US$15 (R02-05) y la guardia sin cubrir (§5); el resto es cálculo propio sin contraste externo.
+Recalculados por Claude con un script. De esta tabla, R02 solo trae US$55 y US$15 (R02-05) y la guardia sin cubrir (§5); el resto es cálculo propio sin contraste externo.
 
 | Cálculo | Fórmula | Resultado | Límite |
 | --- | --- | --- | --- |
@@ -144,7 +144,7 @@ Recalculados por Claude con un script. R02 solo trae US$55 y US$15 (R02-05) y la
 | Retención técnica a 12 h | 1 día: 4 bloques; 30 días: 108 | US$20 / US$540 | 1 día exige borrado por API, sin probar; 30 días es el mínimo automático |
 | Umbral de la referencia de US$3.000 (12 h; RTMP con relé y Cloudflare; sin moderación humana; f = fracción del tiempo con 3 destinos) | 2.678 + 324·f + S > 3.000; 2.678 = 1.080 (entrega) + 800 (KYC) + 648 (IA) + 150 (servidores) | Con S = 20 y sin otras grabaciones: **f > 151/162 ≈ 0,9321**. Con las publicadas en la cuenta: f > 0,7623 (mes 1), 0,5926 (mes 2); desde el mes 6, con f = 0 | KYC, IA y servidores: partidas de la v1.0 no reverificadas. Relé sin cotizar |
 | Guardia sin cubrir (lectura B: detección automática aceptada [CC]) | 360 o 720 − 40 × 52 ÷ 12 [Supuesto] | 186,7 h (12 h/día) / 546,7 h (24 h/día) | Suponen todas las horas del administrador dentro de horas con directo |
-| Guardia frente a trabajo con revisión de grabaciones, r = 1 [Supuesto] | S_B (bajo / central / alto) + O (mínimo del rango de la v1.1) + revisión. 12 h: 48 / 135 / 240 + 86,75 + 180. 24 h: 96 / 270 / 480 + 101,75 + 360 | 12 h: 314,75 < 360; 401,75 y 506,75 > 360. 24 h: 557,75 < 720; 731,75 y 941,75 > 720. Con O máximo, el sentido no cambia | Sin dominancia general. La guardia domina solo sin la revisión y sin otros volúmenes no definidos |
+| Guardia frente a trabajo con revisión de grabaciones, r = 1 [Supuesto] | S_B (síncrono, lectura B: bajo / central / alto) + O (mínimo del rango de la v1.1) + revisión. 12 h: 48 / 135 / 240 + 86,75 + 180. 24 h: 96 / 270 / 480 + 101,75 + 360 | 12 h: 314,75 < 360; 401,75 y 506,75 > 360. 24 h: 557,75 < 720; 731,75 y 941,75 > 720. Con O máximo, el sentido no cambia | Sin dominancia general. En la lectura B, la guardia domina solo sin la revisión y sin otros volúmenes no definidos |
 
 Horas con servicio, horas de trabajo, guardia y equivalentes de jornada (horas sin cubrir ÷ 162,75: 1,15 y 3,36) son magnitudes distintas; los equivalentes no son plantilla ni calendario de turnos.
 
@@ -170,7 +170,7 @@ Estas comprobaciones verifican la aritmética. **No validan** precios, presupues
 
 ## 6. Preparación de los siguientes encargos
 
-**LIVE-002: prueba técnica sin dinero real.** Alcance en su [borrador](../expedientes/LIVE-002-alcance-borrador.md): captura móvil, tres destinos, chat y regalos, sesiones largas, reconexión, sala exclusiva sin tramas después de T, grabación y cartel. Contenido neutral, saldo ficticio y cuentas autorizadas, sin cobros ni apuestas reales.
+**LIVE-002: prueba técnica sin dinero real.** Alcance en su [borrador](../expedientes/LIVE-002-alcance-borrador.md): captura móvil, tres destinos, chat y regalos, sesiones largas, reconexión, sala exclusiva sin tramas después de T, grabación, cartel y detección y corte. Contenido neutral, saldo ficticio y cuentas autorizadas, sin cobros ni apuestas reales.
 
 **LIVE-005 y LIVE-006.** El [borrador de expedientes](../expedientes/LIVE-005-006-borrador.md) reúne el circuito, las preguntas reformuladas, la evidencia por adjuntar y los datos que faltan. Está preparado y **no enviado**; no hubo contacto con terceros.
 
