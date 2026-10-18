@@ -1,10 +1,10 @@
-# Plan por fases y flujo de entrega — v1.2
+# Plan por fases y flujo de entrega — v1.3
 
 | Campo | Valor |
 | --- | --- |
-| Versión | 1.2 |
+| Versión | 1.3 |
 | Fase activa | **FASE-02, viabilidad y decisiones del piloto** |
-| Entrega activa | LIVE-FASE02-E01 v1.1, reconciliación documental y alcance del primer piloto: [ficha del promotor, v1.1](../expedientes/LIVE-FASE02-E01-ficha-promotor.md) (única revisión activa) |
+| Entrega activa | LIVE-FASE02-E02 v1.1, [propuesta de alcance y circuito del piloto de transmisiones](../expedientes/LIVE-FASE02-E02-alcance-piloto.md) (única entrega activa): en preparación documental; pendiente de auditoría, publicación manual y decisión de alcance del promotor |
 | Definición de producto | [v0.33](../producto/proyecto-live-definicion-v0.33.md), base original conservada como referencia histórica |
 | Registro de decisiones | [v1.0](../producto/REGISTRO-DECISIONES.md); prevalece sobre la v0.33 solo en sus cambios explícitos |
 | Síntesis de investigación | [LIVE-001-resultado-v1.2](../investigacion/LIVE-001-resultado-v1.2.md) |
@@ -16,7 +16,8 @@ Historial del plan:
 | --- | --- | --- | --- |
 | 1.0 | LIVE-FASE01-E01 v1.0, encargo del 17-10-2026 (America/Bogota), apartados 1 a 5. El encargo ejecutable no se copia en el repositorio | `7184f7ca87d51bdba5e21c8e4d29df14025e6b46` | Creación del plan |
 | 1.1 | LIVE-FASE02-E01 v1.0, encargo del 17-10-2026; publicada en `bc5f14617f68a334cffb4f5dfaf10de4f4f9ced4` | `95bc81cb94d28c3b9d03e8696be454898749e5f0` | Solo metadatos y estados: FASE-01 cerrada; FASE-02 activa con LIVE-FASE02-E01 como única entrega activa |
-| 1.2 | LIVE-FASE02-E01 v1.1, encargo del 17-10-2026 | `bc5f14617f68a334cffb4f5dfaf10de4f4f9ced4` | Alcance del primer piloto según el [registro de decisiones](../producto/REGISTRO-DECISIONES.md) (RD-001): casino no obligatorio para el piloto; FASE-02 centrada en el piloto de directos y su economía; FASE-09 diferida; excepción de secuencia para FASE-11 y FASE-12. Entrega activa: E01 v1.1 |
+| 1.2 | LIVE-FASE02-E01 v1.1, encargo del 17-10-2026; cerrada y publicada en `65378a49c17453aa768ca871819abe6748a03908` el 18-10-2026 | `bc5f14617f68a334cffb4f5dfaf10de4f4f9ced4` | Alcance del primer piloto según el [registro de decisiones](../producto/REGISTRO-DECISIONES.md) (RD-001): casino no obligatorio para el piloto; FASE-02 centrada en el piloto de directos y su economía; FASE-09 diferida; excepción de secuencia para FASE-11 y FASE-12. Entrega activa: E01 v1.1 |
+| 1.3 | LIVE-FASE02-E02, encargo del 18-10-2026; preparación v1.0 ajustada a v1.1 tras la revisión R01 (18-10-2026) | `65378a49c17453aa768ca871819abe6748a03908` | Solo metadatos, historial y seguimiento: E01 v1.1 cerrada y publicada; E02 como única entrega activa, en su v1.1. Sin cambios en fases, criterios, dependencias ni orden |
 
 ## 1. Cambio de forma de trabajo
 
@@ -35,7 +36,7 @@ Las fases agrupan objetivos. Cada fase tendrá entregas pequeñas, con alcance p
 | Fase | Objetivo | Alcance | Criterio de cierre | Estado |
 | --- | --- | --- | --- | --- |
 | FASE-01 | Cierre de investigación documental | Congelar la v1.2 como síntesis de esta etapa, trasladar los pendientes externos y ordenar el trabajo. | Paquete de cierre auditado, aplicado y publicado manualmente por el usuario. No exige demostrar viabilidad legal. | Cerrada el 17-10-2026; publicada manualmente en `95bc81cb94d28c3b9d03e8696be454898749e5f0` |
-| FASE-02 | Viabilidad y decisiones del piloto | Resolver, para el piloto de directos y su economía, el circuito económico, empresa, pagos, territorios, recursos y operación con respuestas profesionales o contractuales concretas. Las cuestiones exclusivas de los juegos con monedas (ruta del casino, territorio y retiro de los jugadores, monedas en los juegos, anfitriones) quedan diferidas con FASE-09, sin borrarse. | Ruta documentada del piloto de directos y su economía, y decisión del usuario: viable, requiere cambios o bloqueada. No se inventa aceptación para avanzar. Las cuestiones exclusivas de los juegos no bloquean este cierre para ese piloto. | ACTIVA: revisión LIVE-FASE02-E01 v1.1 |
+| FASE-02 | Viabilidad y decisiones del piloto | Resolver, para el piloto de directos y su economía, el circuito económico, empresa, pagos, territorios, recursos y operación con respuestas profesionales o contractuales concretas. Las cuestiones exclusivas de los juegos con monedas (ruta del casino, territorio y retiro de los jugadores, monedas en los juegos, anfitriones) quedan diferidas con FASE-09, sin borrarse. | Ruta documentada del piloto de directos y su economía, y decisión del usuario: viable, requiere cambios o bloqueada. No se inventa aceptación para avanzar. Las cuestiones exclusivas de los juegos no bloquean este cierre para ese piloto. | ACTIVA: entrega LIVE-FASE02-E02 v1.1. E01 cerrada y publicada en `65378a4` |
 | FASE-03 | Prueba técnica móvil | Comprobar captura, multistream, chat/regalos, reconexión y transición a exclusivo con contenido neutral. | Resultados reproducibles en equipos y cuentas autorizados, con límites y fallos conocidos; los obstáculos vuelven a una decisión explícita. | Pendiente |
 | FASE-04 | Diseño funcional y experiencia | Concretar pantallas, reglas de intervalos, perfiles, devoluciones, permisos y contratos entre módulos. | Prototipo y reglas de aceptación revisados; detalles propuestos diferenciados de decisiones confirmadas. | Pendiente |
 | FASE-05 | Base técnica y seguridad | Preparar arquitectura, proyecto, datos, cuentas, roles, verificación y registro de operaciones. | Base ejecutable y controles esenciales comprobados; integraciones de prueba donde corresponda. | Pendiente |
