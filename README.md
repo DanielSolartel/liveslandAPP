@@ -1,8 +1,8 @@
 # LIVE (identificador provisional)
 
-Plataforma de transmisiones en vivo y monetización de creadores, con contenido para adultos. El primer piloto prioriza las transmisiones en vivo; los juegos con monedas quedan diferidos para una etapa posterior, según el [registro de decisiones](docs/producto/REGISTRO-DECISIONES.md). El primer mercado de recargas y retiros es Colombia.
+Plataforma de transmisiones en vivo y monetización de creadores, con contenido para adultos. Según el [registro de decisiones](docs/producto/REGISTRO-DECISIONES.md), el primer piloto incluye las transmisiones en vivo y el contenido exclusivo de los perfiles. Los juegos con monedas, los aportes directos en dinero, las campañas QR remuneradas y «Cercanos» quedan para después del primer piloto. El primer mercado de recargas y retiros es Colombia.
 
-**Etapa actual: FASE-02, viabilidad y decisiones del piloto.** La aplicación todavía **no está implementada**: este repositorio solo contiene documentación. La investigación documental LIVE-001 se cerró en FASE-01; sus conclusiones jurídicas y contractuales siguen siendo **provisionales**.
+**Etapa actual: FASE-02, viabilidad y decisiones del piloto.** La aplicación todavía **no está implementada**: este repositorio solo contiene documentación. La investigación documental LIVE-001 se cerró en FASE-01; sus conclusiones jurídicas y contractuales siguen siendo **provisionales**. Las decisiones de alcance no autorizan cobros ni pagos reales.
 
 ## Empieza aquí
 
