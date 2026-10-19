@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LIVE · experimento de directo</title>
+    <link rel="stylesheet" href="/estilos.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Experimento de directo</h1>
+      <p class="aviso">Prueba técnica de FASE-03: contenido neutral, un emisor y un espectador, sin grabación ni cobros.</p>
+    </header>
+
+    <main>
+      <section id="vista-inicio" hidden>
+        <h2>Emisor</h2>
+        <p>Crea una sesión temporal y comparte el enlace del espectador.</p>
+        <button id="btn-crear" type="button">Crear sesión de prueba</button>
+      </section>
+
+      <section id="vista-emisor" hidden>
+        <h2>Emisor</h2>
+        <label for="enlace-espectador">Enlace del espectador (ábrelo en otro navegador o contexto)</label>
+        <div class="fila">
+          <input id="enlace-espectador" type="text" readonly />
+          <button id="btn-copiar" type="button">Copiar</button>
+        </div>
+        <div class="fila">
+          <button id="btn-activar" type="button">Activar cámara y micrófono</button>
+          <button id="btn-finalizar" type="button" class="peligro">Finalizar emisión</button>
+        </div>
+        <video id="video-local" autoplay playsinline muted></video>
+      </section>
+
+      <section id="vista-espectador" hidden>
+        <h2>Espectador</h2>
+        <div class="fila">
+          <button id="btn-reproducir" type="button" hidden>Reproducir audio y video</button>
+          <button id="btn-salir" type="button" class="peligro">Salir</button>
+        </div>
+        <video id="video-remoto" autoplay playsinline></video>
+      </section>
+
+      <section id="vista-final" hidden>
+        <p id="texto-final"></p>
+        <button id="btn-nueva" type="button">Nueva sesión</button>
+      </section>
+
+      <section aria-live="polite" class="estados">
+        <h2>Estado</h2>
+        <dl>
+          <dt>Rol</dt><dd id="estado-rol">—</dd>
+          <dt>Señalización</dt><dd id="estado-senal">—</dd>
+          <dt>Conexión</dt><dd id="estado-conexion">—</dd>
+          <dt>ICE</dt><dd id="estado-ice">—</dd>
+          <dt>Medios</dt><dd id="estado-medios">—</dd>
+        </dl>
+        <p id="mensaje-error" class="error" role="alert" hidden></p>
+      </section>
+    </main>
+  </body>
+</html>

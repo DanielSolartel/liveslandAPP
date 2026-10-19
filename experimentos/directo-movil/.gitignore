@@ -1,0 +1,7 @@
+node_modules/
+# Material TLS local para pruebas físicas: nunca en el repositorio.
+*.pem
+*.key
+*.crt
+*.p12
+certificados/

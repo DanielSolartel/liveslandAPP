@@ -1,19 +1,20 @@
-# Registro de decisiones del promotor — v1.1
+# Registro de decisiones del promotor — v1.2
 
 | Campo | Valor |
 | --- | --- |
-| Versión | 1.1 |
-| Fecha | v1.0: 17-10-2026. v1.1: 18-10-2026 (America/Bogota) |
-| Entrega | v1.0: LIVE-FASE02-E01 v1.1. v1.1: LIVE-FASE02-E03 v1.0, registro de decisiones y dependencias del piloto ([plan por fases, v1.4](../estado/PLAN-POR-FASES.md)) |
-| Base | v1.0: `bc5f14617f68a334cffb4f5dfaf10de4f4f9ced4`. v1.1: `14926d2575acf492afdbfb60a8777eabfa077fcd` |
-| Estado | v1.0 publicada en `65378a4` con E01 v1.1. v1.1 preparada; pendiente de auditoría y publicación manual. Las decisiones RD-006 a RD-010 ya están recibidas, aunque su documentación aún no esté publicada |
+| Versión | 1.2 |
+| Fecha | v1.0: 17-10-2026. v1.1 y v1.2: 18-10-2026 (America/Bogota) |
+| Entrega | v1.0: LIVE-FASE02-E01 v1.1. v1.1: LIVE-FASE02-E03 v1.0. v1.2: LIVE-FASE03-E01 v1.2, que corrige la v1.0 y la v1.1 tras las revisiones R01 y R02 sin cambiar este registro ([plan por fases, v1.6](../estado/PLAN-POR-FASES.md)) |
+| Base | v1.0: `bc5f14617f68a334cffb4f5dfaf10de4f4f9ced4`. v1.1: `14926d2575acf492afdbfb60a8777eabfa077fcd`. v1.2: `4cd3ce453f2bdb8ba34f763e5c87836d4187a683` |
+| Estado | v1.0 publicada en `65378a4` con E01 v1.1. v1.1 publicada en `8128802` con E03 v1.0. v1.2 preparada; pendiente de auditoría y publicación manual. La respuesta que registra RD-011 ya está recibida, aunque su documentación aún no esté publicada |
 
 Historial:
 
 | Versión | Entradas | Entrega | Publicación |
 | --- | --- | --- | --- |
 | 1.0 | RD-001 a RD-005 | LIVE-FASE02-E01 v1.1 | `65378a49c17453aa768ca871819abe6748a03908` |
-| 1.1 | RD-006 a RD-010 | LIVE-FASE02-E03 v1.0 | No publicada |
+| 1.1 | RD-006 a RD-010 | LIVE-FASE02-E03 v1.0 | `8128802bbeca0349755776a0383e79853ff8c4b8` |
+| 1.2 | RD-011 | LIVE-FASE03-E01 v1.2 | No publicada |
 
 ## 1. Relación con la definición v0.33
 
@@ -143,6 +144,17 @@ Origen de RD-001 a RD-005: encargo LIVE-FASE02-E01 v1.1, que recoge la confirmac
 | Efecto | Estas propuestas de la v0.33 pasan a ser requisitos del piloto. La verificación de la mayoría de edad de los espectadores al registrarse sigue vigente |
 | Límites | Métodos, proveedores y condiciones concretas, pendientes de validación (Q10, Q14 y Q18, entre otras). No elige vigilancia humana continua, plantilla, horarios, plazos de conservación, proveedor de identidad ni arquitectura |
 
+### RD-011. Acceso internacional de los espectadores
+
+| Campo | Contenido |
+| --- | --- |
+| Fecha | 18-10-2026 |
+| Tipo | **Preferencia**: objetivo de cobertura del promotor |
+| Origen | Respuesta del promotor a la pregunta 2 del [expediente E04, §5.3](../expedientes/LIVE-FASE02-E04-validaciones-piloto.md#53-próximo-bloque-al-promotor), en su conversación con ChatGPT del 18-10-2026, transmitida por el encargo LIVE-FASE03-E01 v1.0, que no se copia en el repositorio. No es una confirmación de terceros |
+| Registro | Espectadores: «permitir acceso internacional sujeto a las restricciones que se validen» |
+| Efecto | Sustituye, como objetivo, el «sin definir» del territorio de los espectadores (E04, §5.2). Las consultas que lo trataban como escenario, por ejemplo Q2 (a), Q11, Q14 y Q15, deben considerar el acceso internacional con las restricciones que resulten de la validación |
+| Límites | Es un objetivo de cobertura: no acredita admisión mundial ni fija una lista de países autorizados. No modifica RD-003, referido a los jugadores de juegos futuros. No convierte los cuatro países de residencia de los creadores en territorios de espectadores. No cambia que Colombia sea el primer mercado de recargas y retiros, ni decide desde qué países podrá recargarse. No autoriza el envío de consultas |
+
 ## 4. Menciones de la v0.33 afectadas por RD-001
 
 La v0.33 no se modifica. Estas menciones de la obligatoriedad del casino en el lanzamiento, en la primera versión pública o con usuarios reales quedan como **registro histórico** en lo que respecta al primer piloto:
@@ -175,6 +187,10 @@ De la v1.1 (RD-006 a RD-010):
 - [Estado del proyecto](../estado/ESTADO-PROYECTO.md): decisiones vigentes, efecto económico y pendientes del piloto y de lo diferido.
 - [README](../../README.md): descripción del piloto.
 - La [propuesta E02, v1.1](../expedientes/LIVE-FASE02-E02-alcance-piloto.md) se conserva sin editar como propuesta histórica. Las decisiones vigentes se leen en este registro y en el estado.
+
+De la v1.2 (RD-011):
+
+- [Estado del proyecto](../estado/ESTADO-PROYECTO.md): territorio de los espectadores, junto con los datos operativos recibidos, que no son cambios de producto.
 
 ## 6. Origen y alcance común de RD-006 a RD-010
 

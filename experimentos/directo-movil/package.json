@@ -1,0 +1,22 @@
+{
+  "name": "live-experimento-directo-movil",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Experimento técnico de FASE-03: un emisor y un espectador por sesión con WebRTC y señalización local mínima. No es la aplicación de producción.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/inicio.js",
+    "tipos": "tsc -p tsconfig.json",
+    "prueba": "node --test \"pruebas/unidad/*.test.js\"",
+    "prueba:e2e": "node --test --test-concurrency=1 \"pruebas/e2e/*.test.js\"",
+    "comprobar": "npm run tipos && npm run prueba"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "playwright-core": "1.56.1",
+    "typescript": "5.9.3"
+  }
+}

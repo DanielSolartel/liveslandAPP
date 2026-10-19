@@ -1,6 +1,6 @@
 # Instrucciones para Claude en este repositorio
 
-Proyecto LIVE: documentación de definición e investigación. La aplicación no está implementada.
+Proyecto LIVE: documentación de definición y viabilidad, y un experimento técnico en `experimentos/directo-movil/`. La aplicación de producción no está implementada.
 
 ## Antes de trabajar
 
@@ -11,7 +11,7 @@ Proyecto LIVE: documentación de definición e investigación. La aplicación no
 ## Alcance
 
 - Solo hay una fase activa y una entrega activa. Las entregas son pequeñas; no se construye una fase completa en un solo cambio.
-- La fase siguiente empieza solo con un encargo explícito del usuario, después del cierre de la anterior.
+- La fase siguiente empieza solo con un encargo explícito del usuario, después del cierre de la anterior. Solo se admite una excepción si el plan la registra expresamente y su encargo la autoriza; la excepción no cierra ni sustituye la fase que queda en espera.
 - Ante un obstáculo material, registra la decisión necesaria. No elimines el requisito ni saltes de fase.
 - La definición v0.33 es la base de producto y sus decisiones siguen vigentes. Cambiar el orden de construcción no autoriza a retirar funciones, y un cambio de proceso no crea una nueva versión del producto.
 - No modifiques los originales de `docs/producto/` y `docs/encargos/` ni los informes de LIVE-001 en `docs/investigacion/`.

@@ -2,7 +2,7 @@
 
 Plataforma de transmisiones en vivo y monetización de creadores, con contenido para adultos. Según el [registro de decisiones](docs/producto/REGISTRO-DECISIONES.md), el primer piloto incluye las transmisiones en vivo y el contenido exclusivo de los perfiles. Los juegos con monedas, los aportes directos en dinero, las campañas QR remuneradas y «Cercanos» quedan para después del primer piloto. El primer mercado de recargas y retiros es Colombia.
 
-**Etapa actual: FASE-02, viabilidad y decisiones del piloto.** La aplicación todavía **no está implementada**: este repositorio solo contiene documentación. La investigación documental LIVE-001 se cerró en FASE-01; sus conclusiones jurídicas y contractuales siguen siendo **provisionales**. Las decisiones de alcance no autorizan cobros ni pagos reales.
+**Etapa actual: FASE-03, prueba técnica móvil**, con FASE-02 en espera de validaciones externas y sin cerrar. La aplicación de producción todavía **no está implementada**. Existe un experimento técnico de emisión interna, de un emisor a un espectador, en [experimentos/directo-movil](experimentos/directo-movil/README.md), con instrucciones para ejecutarlo. La investigación documental LIVE-001 se cerró en FASE-01; sus conclusiones jurídicas y contractuales siguen siendo **provisionales**. Las decisiones de alcance no autorizan cobros ni pagos reales.
 
 ## Empieza aquí
 
@@ -22,5 +22,6 @@ Plataforma de transmisiones en vivo y monetización de creadores, con contenido 
 | `docs/investigacion/` | Informes v1.0 y v1.1 (históricos), v1.2 (vigente) y registros de correcciones |
 | `docs/expedientes/` | Entregas de FASE-02, y borradores de alcance de LIVE-002 y de expedientes LIVE-005 y LIVE-006 (preparados, no enviados) |
 | `docs/estado/` | Estado del proyecto y plan por fases |
+| `experimentos/directo-movil/` | Experimento técnico de FASE-03; no es la aplicación de producción |
 
 Ningún informe sustituye la validación profesional ni la aceptación escrita de proveedores. Las propuestas de una entrega no son decisiones del promotor hasta que este las apruebe expresamente.
