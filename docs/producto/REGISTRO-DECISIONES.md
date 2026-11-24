@@ -6,7 +6,7 @@
 | Fecha | v1.0: 17-10-2026. v1.1 y v1.2: 18-10-2026 (America/Bogota) |
 | Entrega | v1.0: LIVE-FASE02-E01 v1.1. v1.1: LIVE-FASE02-E03 v1.0. v1.2: LIVE-FASE03-E01 v1.2, que corrige la v1.0 y la v1.1 tras las revisiones R01 y R02 sin cambiar este registro ([plan por fases, v1.6](../estado/PLAN-POR-FASES.md)) |
 | Base | v1.0: `bc5f14617f68a334cffb4f5dfaf10de4f4f9ced4`. v1.1: `14926d2575acf492afdbfb60a8777eabfa077fcd`. v1.2: `4cd3ce453f2bdb8ba34f763e5c87836d4187a683` |
-| Estado | v1.0 publicada en `65378a4` con E01 v1.1. v1.1 publicada en `8128802` con E03 v1.0. v1.2 preparada; pendiente de auditoría y publicación manual. La respuesta que registra RD-011 ya está recibida, aunque su documentación aún no esté publicada |
+| Estado | v1.0 publicada en `65378a4` con E01 v1.1. v1.1 publicada en `8128802` con E03 v1.0. v1.2 publicada en `7eae89e0b083b26ba3a44f1e22304e32e47c32a5` con FASE03-E01 v1.2. La respuesta que registra RD-011 se recibió el 18-10-2026 |
 
 Historial:
 
@@ -14,7 +14,7 @@ Historial:
 | --- | --- | --- | --- |
 | 1.0 | RD-001 a RD-005 | LIVE-FASE02-E01 v1.1 | `65378a49c17453aa768ca871819abe6748a03908` |
 | 1.1 | RD-006 a RD-010 | LIVE-FASE02-E03 v1.0 | `8128802bbeca0349755776a0383e79853ff8c4b8` |
-| 1.2 | RD-011 | LIVE-FASE03-E01 v1.2 | No publicada |
+| 1.2 | RD-011 | LIVE-FASE03-E01 v1.2 | `7eae89e0b083b26ba3a44f1e22304e32e47c32a5` |
 
 ## 1. Relación con la definición v0.33
 

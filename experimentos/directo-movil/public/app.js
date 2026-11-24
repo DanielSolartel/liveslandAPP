@@ -1,6 +1,15 @@
 // @ts-check
 // Interfaz del experimento: emitir, mirar y finalizar. WebRTC sin STUN/TURN (solo candidatos locales).
-import { contarPistasActivas, liberarMedios, solicitarMedios } from './medios.js';
+import {
+  agregarEstadisticas,
+  construirInforme,
+  contarPistasActivas,
+  copiarTexto,
+  LIMITE_ESTADISTICAS_INFORME_MS,
+  liberarMedios,
+  serializarInforme,
+  solicitarMedios,
+} from './medios.js';
 import { CanalSenalizacion, crearSesion } from './senalizacion.js';
 
 /** @typedef {import('./senalizacion.js').EventoSse} EventoSse */
@@ -32,6 +41,10 @@ const ui = {
   btnReproducir: el('btn-reproducir', HTMLButtonElement),
   btnSalir: el('btn-salir', HTMLButtonElement),
   btnNueva: el('btn-nueva', HTMLButtonElement),
+  btnInforme: el('btn-informe', HTMLButtonElement),
+  btnCopiarInforme: el('btn-copiar-informe', HTMLButtonElement),
+  informeTexto: el('informe-texto', HTMLTextAreaElement),
+  estadoInforme: el('estado-informe', HTMLElement),
   enlace: el('enlace-espectador', HTMLInputElement),
   videoLocal: el('video-local', HTMLVideoElement),
   videoRemoto: el('video-remoto', HTMLVideoElement),
@@ -86,6 +99,22 @@ const estado = {
   /** Resultado del aviso de fin o de salida enviado al servidor. */
   /** @type {'sin-aviso' | 'pendiente' | 'confirmado' | 'sin-confirmar'} */
   avisoCierre: 'sin-aviso',
+  /** Estado del canal de señalización, como valor de lista cerrada para el informe de diagnóstico. */
+  /** @type {'sin-canal' | 'conectando' | 'conectada' | 'cerrada' | 'error' | 'no-iniciada'} */
+  canalEstado: 'sin-canal',
+  /** Estado de la captura local, como valor de lista cerrada para el informe de diagnóstico. */
+  /** @type {'sin-sesion' | 'no-aplica' | 'sin-activar' | 'solicitando' | 'activa' | 'sin-captura' | 'liberada'} */
+  captura: 'sin-sesion',
+  /** Código del último fallo de captura, o `null`. */
+  /** @type {string | null} */
+  codigoCaptura: null,
+  /** Último informe solicitado. Un informe solo se muestra o se copia si sigue siendo la última solicitud. */
+  solicitudInforme: 0,
+  /** Hay una copia en curso. Solo puede haber una: así dos escrituras al portapapeles no terminan en orden inverso. */
+  copiando: false,
+  /** Categorías de error ocurridas en esta página, sin repetir y de lista cerrada (sin mensajes ni datos). */
+  /** @type {string[]} */
+  errores: [],
   /** @type {RTCIceCandidateInit[]} */
   candidatosPendientes: [],
   /** Todos los flujos capturados en esta página, también los descartados, para comprobar que no quedan pistas. */
@@ -106,10 +135,14 @@ function fijar(campo, texto) {
   ui.estado[campo].textContent = texto;
 }
 
-/** @param {string} mensaje */
-function mostrarError(mensaje) {
+/**
+ * @param {string} mensaje
+ * @param {string} categoria Categoría de lista cerrada (ver `CATEGORIAS_ERROR` en medios.js).
+ */
+function mostrarError(mensaje, categoria) {
   ui.error.textContent = mensaje;
   ui.error.hidden = false;
+  if (!estado.errores.includes(categoria)) estado.errores.push(categoria);
 }
 
 function limpiarError() {
@@ -118,17 +151,17 @@ function limpiarError() {
 }
 
 /** @param {{ estadoHttp?: number, error?: string } | undefined} detalle */
-function textoErrorCanal(detalle) {
+function errorCanal(detalle) {
   switch (detalle?.estadoHttp) {
     case 401:
     case 403:
-      return 'El enlace no es válido para esta sesión.';
+      return { texto: 'El enlace no es válido para esta sesión.', categoria: 'canal-no-autorizado' };
     case 404:
-      return 'La sesión no existe o ya terminó.';
+      return { texto: 'La sesión no existe o ya terminó.', categoria: 'canal-inexistente' };
     case 409:
-      return 'Ya hay otro participante conectado con este rol.';
+      return { texto: 'Ya hay otro participante conectado con este rol.', categoria: 'canal-rol-ocupado' };
     default:
-      return 'Se perdió la conexión con el servidor local de señalización.';
+      return { texto: 'Se perdió la conexión con el servidor local de señalización.', categoria: 'canal-perdido' };
   }
 }
 
@@ -149,12 +182,16 @@ function abrirCanal(sesion, token) {
         .then(() => (estado.canal === canal ? manejarEvento(e) : undefined))
         .catch((error) => {
           if (estado.canal !== canal) return;
-          mostrarError(`Error al procesar la señalización: ${error instanceof Error ? error.message : String(error)}`);
+          mostrarError(
+            `Error al procesar la señalización: ${error instanceof Error ? error.message : String(error)}`,
+            'senal-procesamiento',
+          );
         });
     },
     alEstado: (e, detalle) => manejarEstadoCanal(canal, e, detalle),
   });
   estado.canal = canal;
+  estado.canalEstado = 'conectando';
   void canal.abrir();
 }
 
@@ -165,9 +202,11 @@ function abrirCanal(sesion, token) {
  */
 function manejarEstadoCanal(canal, e, detalle) {
   if (estado.canal !== canal) return;
+  estado.canalEstado = e;
   fijar('senal', e);
   if (e === 'error' && !estado.terminado) {
-    mostrarError(textoErrorCanal(detalle));
+    const { texto, categoria } = errorCanal(detalle);
+    mostrarError(texto, categoria);
     cerrarPeer();
   }
 }
@@ -231,6 +270,7 @@ function crearPeer() {
     if (pc.connectionState === 'failed') {
       mostrarError(
         'La conexión WebRTC falló. Sin STUN/TURN solo funciona en el mismo equipo o en una red local sin aislamiento.',
+        'webrtc-conexion-fallida',
       );
     }
   };
@@ -287,7 +327,9 @@ async function manejarSenal(senal) {
     await pc.setLocalDescription(respuesta);
     if (!vigente()) return;
     const r = await canal.enviar({ tipo: 'respuesta', sdp: pc.localDescription?.sdp });
-    if (!r.ok && vigente()) mostrarError(`No se pudo enviar la respuesta (${r.error ?? r.estadoHttp}).`);
+    if (!r.ok && vigente()) {
+      mostrarError(`No se pudo enviar la respuesta (${r.error ?? r.estadoHttp}).`, 'senal-respuesta-no-enviada');
+    }
   } else if (senal.tipo === 'respuesta' && estado.rol === 'emisor' && estado.pc) {
     const pc = estado.pc;
     await pc.setRemoteDescription({ type: 'answer', sdp: senal.sdp });
@@ -310,11 +352,14 @@ async function crearSesionEmisor() {
       r.estadoHttp === 503
         ? 'Se alcanzó el máximo de sesiones de prueba. Espera a que caduquen o reinicia el servidor.'
         : 'No se pudo crear la sesión en el servidor local.',
+      r.estadoHttp === 503 ? 'sesion-limite-alcanzado' : 'sesion-no-creada',
     );
     return;
   }
   estado.rol = 'emisor';
   estado.terminado = false;
+  estado.captura = 'sin-activar';
+  estado.codigoCaptura = null;
   ui.enlace.value = `${location.origin}/?s=${encodeURIComponent(r.sesion)}#${r.tokenEspectador}`;
   ui.btnActivar.disabled = false;
   fijar('rol', 'emisor');
@@ -331,6 +376,7 @@ async function activarMedios() {
   const vigente = () => estado.generacion === generacion && estado.intentoCaptura === intento;
   limpiarError();
   ui.btnActivar.disabled = true;
+  estado.captura = 'solicitando';
   fijar('medios', 'solicitando permiso…');
   const r = await solicitarMedios({ isSecureContext: window.isSecureContext, mediaDevices: navigator.mediaDevices });
   if (!vigente()) {
@@ -343,10 +389,14 @@ async function activarMedios() {
   }
   if (!r.ok) {
     ui.btnActivar.disabled = false;
+    estado.captura = 'sin-captura';
+    estado.codigoCaptura = r.codigo;
     fijar('medios', `sin captura (${r.codigo})`);
-    mostrarError(r.mensaje);
+    mostrarError(r.mensaje, `captura-${r.codigo}`);
     return;
   }
+  estado.captura = 'activa';
+  estado.codigoCaptura = null;
   estado.streamLocal = r.stream;
   estado.historialLocal.push(r.stream);
   ui.videoLocal.muted = true;
@@ -369,7 +419,7 @@ async function iniciarOferta() {
   await pc.setLocalDescription(oferta);
   if (!vigente()) return;
   const r = await canal.enviar({ tipo: 'oferta', sdp: pc.localDescription?.sdp });
-  if (!r.ok && vigente()) mostrarError(`No se pudo enviar la oferta (${r.error ?? r.estadoHttp}).`);
+  if (!r.ok && vigente()) mostrarError(`No se pudo enviar la oferta (${r.error ?? r.estadoHttp}).`, 'senal-oferta-no-enviada');
 }
 
 function finalizarEmision() {
@@ -388,6 +438,9 @@ function nuevaSesion() {
   estado.terminado = false;
   estado.parPresente = false;
   estado.avisoCierre = 'sin-aviso';
+  estado.canalEstado = 'sin-canal';
+  estado.captura = 'sin-sesion';
+  estado.codigoCaptura = null;
   ui.enlace.value = '';
   ui.btnFinalizar.disabled = false;
   ui.btnActivar.disabled = false;
@@ -404,11 +457,13 @@ function nuevaSesion() {
  */
 function iniciarEspectador(sesion, token) {
   estado.rol = 'espectador';
+  estado.captura = 'no-aplica';
   fijar('rol', 'espectador');
   mostrar('espectador');
   if (!PATRON_SESION.test(sesion) || !PATRON_TOKEN.test(token)) {
+    estado.canalEstado = 'no-iniciada';
     fijar('senal', 'no iniciada');
-    mostrarError('El enlace del espectador está incompleto o no es válido.');
+    mostrarError('El enlace del espectador está incompleto o no es válido.', 'enlace-incompleto');
     return;
   }
   fijar('medios', 'esperando medios del emisor');
@@ -433,6 +488,7 @@ async function intentarReproducir() {
   } catch (error) {
     if (error instanceof DOMException && error.name === 'NotAllowedError') {
       ui.btnReproducir.hidden = false;
+      if (!estado.errores.includes('reproduccion-requiere-gesto')) estado.errores.push('reproduccion-requiere-gesto');
       fijar('medios', 'el navegador requiere una acción para reproducir');
     }
   }
@@ -473,6 +529,7 @@ async function seguirAvisoCierre(aviso, tipo) {
       ? `La captura ya está detenida en este dispositivo, pero el servidor no confirmó el fin de la sesión (${motivo}). ` +
           'Puede que el espectador no reciba el aviso; el servidor elimina la sesión cuando queda sin participantes o cuando caduca.'
       : `Has salido en este dispositivo, pero el servidor no confirmó la salida (${motivo}).`,
+    'aviso-cierre-sin-confirmar',
   );
 }
 
@@ -489,6 +546,8 @@ function terminar(texto) {
   const canal = estado.canal;
   estado.canal = null;
   canal?.cerrar();
+  estado.canalEstado = 'cerrada';
+  if (estado.rol === 'emisor') estado.captura = 'liberada';
   estado.parPresente = false;
   ui.btnReproducir.hidden = true;
   fijar('senal', 'cerrada');
@@ -509,27 +568,207 @@ window.addEventListener('pagehide', () => {
   estado.canal?.cerrar();
 });
 
+/**
+ * Registros de `getStats()` como lista.
+ * @param {RTCPeerConnection} pc
+ * @returns {Promise<unknown[]>}
+ */
+async function registrosEstadisticas(pc) {
+  /** @type {unknown[]} */
+  const registros = [];
+  (await pc.getStats()).forEach((/** @type {unknown} */ registro) => registros.push(registro));
+  return registros;
+}
+
+// ---------- Informe de diagnóstico ----------
+
+/**
+ * Lee, sin modificar nada y de una sola vez (sin esperas intermedias), el estado de la página para el informe.
+ * Son datos brutos: `construirInforme` solo admite de ellos los campos de su lista permitida. Cada lectura es
+ * independiente: si una falla, ese dato queda no disponible.
+ * @param {RTCPeerConnection | null} pc
+ */
+function leerEstadoInforme(pc) {
+  /**
+   * @template T
+   * @param {() => T} lectura
+   * @returns {T | null}
+   */
+  const leer = (lectura) => {
+    try {
+      return lectura();
+    } catch {
+      return null;
+    }
+  };
+  /** @param {MediaStream | null} flujo */
+  const pistasDe = (flujo) =>
+    leer(() => (flujo ? flujo.getTracks() : []))?.map((pista) => ({
+      tipo: pista.kind,
+      estado: pista.readyState,
+      silenciada: pista.muted,
+      ajustes: typeof pista.getSettings === 'function' ? leer(() => pista.getSettings()) : null,
+    })) ?? [];
+  const pistasRemotas = pistasDe(estado.streamRemoto);
+  const video = ui.videoRemoto;
+  const sinFlujo = video.srcObject === null;
+  return {
+    rol: estado.rol,
+    terminado: estado.terminado,
+    canal: estado.canalEstado,
+    avisoCierre: estado.avisoCierre,
+    captura: estado.captura,
+    codigoCaptura: estado.codigoCaptura,
+    errores: [...estado.errores],
+    vistaPreviaSilenciada: ui.videoLocal.muted,
+    flujosLocalesCreados: estado.historialLocal.length,
+    pistasLocalesActivas: contarPistasActivas(estado.historialLocal),
+    pistasRemotasActivas: pistasRemotas.filter((p) => p.estado === 'live').length,
+    capturasDescartadas: estado.capturasDescartadas,
+    pistasLocales: pistasDe(estado.streamLocal),
+    pistasRemotas,
+    conexionAbierta: pc !== null,
+    conexion: pc ? pc.connectionState : 'sin-conexion',
+    ice: pc ? pc.iceConnectionState : null,
+    senalizacionRtc: pc ? pc.signalingState : null,
+    reproduccion: {
+      estado: sinFlujo ? 'sin-flujo' : !ui.btnReproducir.hidden ? 'requiere-gesto' : video.paused ? 'pausada' : 'reproduciendo',
+      ancho: video.videoWidth,
+      alto: video.videoHeight,
+      silenciado: video.muted,
+    },
+    // Se pasan cadenas del navegador solo para que `construirInforme` reconozca familia, versión y plataforma;
+    // no llegan al informe. No se piden valores de alta entropía de `userAgentData`.
+    navegador: {
+      agente: leer(() => navigator.userAgent),
+      plataforma: leer(() => navigator.platform),
+      plataformaDatos: leer(() => /** @type {any} */ (navigator).userAgentData?.platform),
+      visibilidad: leer(() => document.visibilityState),
+      contextoSeguro: leer(() => window.isSecureContext),
+      apis: {
+        getUserMedia: leer(() => typeof navigator.mediaDevices?.getUserMedia === 'function'),
+        rtcPeerConnection: leer(() => typeof RTCPeerConnection === 'function'),
+        getStats: leer(() => typeof RTCPeerConnection.prototype.getStats === 'function'),
+        portapapeles: leer(() => typeof navigator.clipboard?.writeText === 'function'),
+      },
+    },
+  };
+}
+
+/**
+ * Estadísticas de una conexión, acotadas en el tiempo y válidas solo si ni la sesión ni la conexión cambiaron
+ * mientras se esperaban: las de una conexión o una sesión anteriores no se mezclan con el estado actual.
+ * @param {RTCPeerConnection} pc
+ * @param {number} generacion
+ * @returns {Promise<{ estado: string, registros?: unknown[] }>}
+ */
+async function estadisticasDelInforme(pc, generacion) {
+  if (typeof pc.getStats !== 'function') return { estado: 'api-ausente' };
+  const cambio = () => estado.pc !== pc || estado.generacion !== generacion;
+  /** @type {ReturnType<typeof setTimeout> | undefined} */
+  let temporizador;
+  const agotado = new Promise((resolver) => {
+    temporizador = setTimeout(() => resolver(null), LIMITE_ESTADISTICAS_INFORME_MS);
+  });
+  try {
+    const registros = await Promise.race([registrosEstadisticas(pc), agotado]);
+    if (registros === null) return { estado: 'tiempo-agotado' };
+    return cambio() ? { estado: 'descartadas' } : { estado: 'ok', registros };
+  } catch {
+    return { estado: cambio() ? 'descartadas' : 'error' };
+  } finally {
+    clearTimeout(temporizador);
+  }
+}
+
+/**
+ * Reúne los datos del informe como una instantánea: todo el estado se lee en un único instante, antes de
+ * esperar a las estadísticas, y estas solo se añaden si siguen siendo de la conexión y la sesión de ese instante.
+ */
+async function reunirDatosInforme() {
+  const pc = estado.pc;
+  const generacion = estado.generacion;
+  const datos = leerEstadoInforme(pc);
+  const estadisticas = pc ? await estadisticasDelInforme(pc, generacion) : { estado: 'sin-conexion' };
+  return { ...datos, estadisticas };
+}
+
+/**
+ * Genera el informe y lo muestra en el cuadro de texto. No cambia ninguna sesión, captura ni conexión.
+ * Si mientras tanto se pidió otro informe, este queda obsoleto: no se muestra y devuelve `null`.
+ * @returns {Promise<string | null>}
+ */
+async function mostrarInforme() {
+  const solicitud = ++estado.solicitudInforme;
+  const instante = new Date();
+  const datos = await reunirDatosInforme();
+  if (solicitud !== estado.solicitudInforme) return null;
+  const texto = serializarInforme(construirInforme(datos, instante));
+  ui.informeTexto.value = texto;
+  ui.informeTexto.hidden = false;
+  return texto;
+}
+
+async function generarInforme() {
+  if ((await mostrarInforme()) === null) return;
+  ui.estadoInforme.textContent =
+    'Informe generado en esta página; no se envió a ningún servidor. Selecciónalo para copiarlo o usa «Copiar informe».';
+}
+
+/**
+ * Copia el informe al portapapeles, solo por una acción explícita del usuario.
+ * - Solo una copia a la vez: mientras una escritura está pendiente, el botón de copia queda deshabilitado y
+ *   no se inicia otra. No se abandona ni se simula la cancelación de una escritura que el navegador ya inició,
+ *   y si el navegador no la resuelve nunca, el botón sigue deshabilitado; la generación de informes y la
+ *   copia manual del cuadro de texto siguen disponibles.
+ * - Tras la escritura se comprueba que el informe copiado sigue siendo el último solicitado. Si no, la copia
+ *   quedó superada: no se cambia el mensaje, la selección ni el foco del informe más reciente, ni se afirma
+ *   que este se copió (el portapapeles contiene el informe de cuando se pulsó).
+ */
+async function copiarInforme() {
+  if (estado.copiando) return;
+  estado.copiando = true;
+  ui.btnCopiarInforme.disabled = true;
+  try {
+    const texto = await mostrarInforme();
+    if (texto === null) return;
+    const solicitud = estado.solicitudInforme;
+    ui.estadoInforme.textContent = 'Copiando el informe…';
+    const r = await copiarTexto(texto, navigator.clipboard);
+    if (solicitud !== estado.solicitudInforme) return;
+    if (r.ok) {
+      ui.estadoInforme.textContent = 'Informe copiado al portapapeles.';
+      return;
+    }
+    // Alternativa manual: el informe queda seleccionado en el cuadro de texto.
+    ui.informeTexto.focus();
+    ui.informeTexto.select();
+    ui.estadoInforme.textContent =
+      r.motivo === 'no-disponible'
+        ? 'Este navegador no permite copiar automáticamente. El informe está seleccionado: cópialo con Ctrl+C o con el menú del móvil.'
+        : 'El navegador rechazó la copia automática. El informe está seleccionado: cópialo con Ctrl+C o con el menú del móvil.';
+  } finally {
+    estado.copiando = false;
+    ui.btnCopiarInforme.disabled = false;
+  }
+}
+
 // Diagnóstico para pruebas automatizadas y manuales: no expone tokens.
 /** @type {any} */ (window).directoDiagnostico = async () => {
   const pc = estado.pc;
+  const agregadas = agregarEstadisticas(pc ? await registrosEstadisticas(pc) : []);
   const medidas = {
-    video: { bytesRecibidos: 0, framesDecodificados: 0, bytesEnviados: 0 },
-    audio: { bytesRecibidos: 0, paquetesRecibidos: 0, bytesEnviados: 0 },
+    video: {
+      bytesRecibidos: agregadas.video.bytesRecibidos ?? 0,
+      framesDecodificados: agregadas.video.fotogramasDecodificados ?? 0,
+      bytesEnviados: agregadas.video.bytesEnviados ?? 0,
+    },
+    audio: {
+      bytesRecibidos: agregadas.audio.bytesRecibidos ?? 0,
+      paquetesRecibidos: agregadas.audio.paquetesRecibidos ?? 0,
+      bytesEnviados: agregadas.audio.bytesEnviados ?? 0,
+    },
   };
-  if (pc) {
-    const informe = await pc.getStats();
-    informe.forEach((/** @type {any} */ r) => {
-      const tipo = r.kind === 'video' ? 'video' : r.kind === 'audio' ? 'audio' : null;
-      if (!tipo) return;
-      if (r.type === 'inbound-rtp') {
-        medidas[tipo].bytesRecibidos += r.bytesReceived ?? 0;
-        if (tipo === 'video') medidas.video.framesDecodificados += r.framesDecoded ?? 0;
-        if (tipo === 'audio') medidas.audio.paquetesRecibidos += r.packetsReceived ?? 0;
-      } else if (r.type === 'outbound-rtp') {
-        medidas[tipo].bytesEnviados += r.bytesSent ?? 0;
-      }
-    });
-  }
   return {
     rol: estado.rol,
     terminado: estado.terminado,
@@ -558,6 +797,8 @@ ui.btnFinalizar.addEventListener('click', () => void finalizarEmision());
 ui.btnNueva.addEventListener('click', nuevaSesion);
 ui.btnSalir.addEventListener('click', () => void salirEspectador());
 ui.btnReproducir.addEventListener('click', () => void intentarReproducir());
+ui.btnInforme.addEventListener('click', () => void generarInforme());
+ui.btnCopiarInforme.addEventListener('click', () => void copiarInforme());
 ui.btnCopiar.addEventListener('click', () => {
   ui.enlace.select();
   void navigator.clipboard?.writeText(ui.enlace.value).catch(() => {});

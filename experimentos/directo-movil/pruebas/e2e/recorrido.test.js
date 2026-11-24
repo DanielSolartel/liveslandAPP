@@ -9,6 +9,7 @@ import assert from 'node:assert/strict';
 import { chromium } from 'playwright-core';
 import { crearServidor } from '../../src/servidor.js';
 import { LIMITE_ENVIO_MS } from '../../public/senalizacion.js';
+import { igualesSalvoCrLf, normalizarCrLf } from './comparacion-portapapeles.js';
 
 const MEDIOS_SINTETICOS = '--use-fake-device-for-media-stream';
 const PERMISO_AUTOMATICO = '--use-fake-ui-for-media-stream';
@@ -214,10 +215,12 @@ test('un enlace con el token de otra sesión no da acceso', async () => {
  * Emisor y espectador en contextos aislados, con audio y video recibidos por WebRTC.
  * @param {import('playwright-core').Browser} navegador
  * @param {string} base
+ * @param {string[]} [permisos] Permisos que se conceden al crear los contextos, antes de capturar. Conceder
+ *   permisos después (`grantPermissions`) restablece los del origen y Chromium detiene las pistas ya capturadas.
  */
-async function emisorYEspectadorConectados(navegador, base) {
-  const emisor = await (await navegador.newContext()).newPage();
-  const espectador = await (await navegador.newContext()).newPage();
+async function emisorYEspectadorConectados(navegador, base, permisos = []) {
+  const emisor = await (await navegador.newContext({ permissions: permisos })).newPage();
+  const espectador = await (await navegador.newContext({ permissions: permisos })).newPage();
   await emisor.goto(`${base}/`);
   const enlace = await crearYLeerEnlace(emisor);
   await emisor.click('#btn-activar');
@@ -424,5 +427,105 @@ test('una captura pendiente de una sesión anterior se detiene y no se incorpora
     assert.equal(await pagina.textContent('#texto-final'), textoFinal);
     assert.equal(await pagina.isVisible('#mensaje-error'), false);
     assert.equal(await captura.pendientes(), 0);
+  });
+});
+
+test('informe de diagnóstico con WebRTC real: ambos roles, copia al portapapeles y sin datos sensibles', async () => {
+  await conEntorno([MEDIOS_SINTETICOS, PERMISO_AUTOMATICO], async ({ base, navegador }) => {
+    const { emisor, espectador } = await emisorYEspectadorConectados(navegador, base, ['clipboard-read', 'clipboard-write']);
+    const enlace = new URL(await emisor.inputValue('#enlace-espectador'));
+    const secretos = [String(enlace.searchParams.get('s')), enlace.hash.slice(1), enlace.origin];
+
+    /**
+     * @param {import('playwright-core').Page} pagina
+     * @returns {Promise<{ texto: string, datos: any }>}
+     */
+    const informe = async (pagina) => {
+      await pagina.evaluate(() => void (/** @type {HTMLTextAreaElement} */ (document.querySelector('#informe-texto')).value = ''));
+      await pagina.click('#btn-informe');
+      await pagina.waitForFunction(() => /** @type {HTMLTextAreaElement} */ (document.querySelector('#informe-texto')).value !== '');
+      const texto = await pagina.inputValue('#informe-texto');
+      return { texto, datos: JSON.parse(texto) };
+    };
+    /** Un informe no contiene enlaces, tokens, SDP, candidatos ni direcciones IP o de red local. */
+    const comprobarSinDatosSensibles = (/** @type {string} */ texto, /** @type {any} */ datos) => {
+      for (const prohibido of [...secretos, 'http', 'candidate', 'v=0', 'a=ice', 'deviceId', 'groupId', 'label']) {
+        assert.equal(texto.includes(prohibido), false, `el informe no debe contener «${prohibido}»`);
+      }
+      assert.doesNotMatch(texto, /\.local\b/, 'sin nombres mDNS');
+      // El informe ya no lleva el agente de usuario: no hay versiones con formato de IP que excluir.
+      assert.doesNotMatch(texto, /\b\d{1,3}(\.\d{1,3}){3}\b/);
+      assert.doesNotMatch(texto, /[0-9a-f]{4}(:[0-9a-f]{0,4}){3,}/i);
+      assert.equal('agente' in datos.navegador, false);
+      assert.doesNotMatch(texto, /Mozilla|AppleWebKit|Gecko/);
+    };
+
+    // Emisor durante la transmisión.
+    const durante = await informe(emisor);
+    comprobarSinDatosSensibles(durante.texto, durante.datos);
+    assert.equal(durante.datos.rol, 'emisor');
+    assert.equal(durante.datos.captura.estado, 'activa');
+    assert.equal(durante.datos.pistas.localesActivas, 2);
+    const video = durante.datos.pistas.locales.find((/** @type {any} */ p) => p.tipo === 'video');
+    const audio = durante.datos.pistas.locales.find((/** @type {any} */ p) => p.tipo === 'audio');
+    assert.ok(video.ajustes.ancho > 0 && video.ajustes.alto > 0 && video.ajustes.fotogramasPorSegundo > 0);
+    assert.ok(audio.ajustes.frecuenciaMuestreo > 0 && audio.ajustes.canales >= 1);
+    assert.equal(durante.datos.webrtc.conexion, 'connected');
+    assert.equal(durante.datos.metricas.disponible, true);
+    assert.ok(durante.datos.metricas.video.bytesEnviados > 0 && durante.datos.metricas.audio.bytesEnviados > 0);
+    assert.equal(durante.datos.navegador.contextoSeguro, true);
+    // Familia y versión reconocidas del navegador real, y plataforma de una lista cerrada.
+    assert.match(durante.datos.navegador.familia, /^(chrome|chrome-sin-interfaz|edge)$/);
+    assert.ok(Number.isInteger(durante.datos.navegador.version) && durante.datos.navegador.version > 0);
+    assert.match(durante.datos.navegador.plataforma, /^(linux|windows|macos|android)$/);
+    assert.deepEqual(Object.values(durante.datos.navegador.apis), [true, true, true, true]);
+
+    // Espectador durante la recepción.
+    const recibiendo = await informe(espectador);
+    comprobarSinDatosSensibles(recibiendo.texto, recibiendo.datos);
+    assert.equal(recibiendo.datos.rol, 'espectador');
+    assert.equal(recibiendo.datos.captura.estado, 'no-aplica');
+    assert.equal(recibiendo.datos.pistas.remotasActivas, 2);
+    assert.equal(recibiendo.datos.reproduccion.estado, 'reproduciendo');
+    assert.ok(recibiendo.datos.reproduccion.ancho > 0 && recibiendo.datos.reproduccion.alto > 0);
+    assert.equal(recibiendo.datos.webrtc.conexion, 'connected');
+    assert.ok(recibiendo.datos.metricas.video.fotogramasDecodificados > 10);
+    assert.ok(recibiendo.datos.metricas.audio.paquetesRecibidos > 10);
+    assert.ok(recibiendo.datos.metricas.video.bytesRecibidos > 0);
+
+    // La copia al portapapeles real solo ocurre al pulsar «Copiar informe» y copia lo mostrado.
+    assert.equal(await emisor.evaluate(() => navigator.clipboard.readText()), '', 'generar el informe no copia nada');
+    await emisor.click('#btn-copiar-informe');
+    await emisor.waitForFunction(() => document.querySelector('#estado-informe')?.textContent === 'Informe copiado al portapapeles.');
+    const copiado = await emisor.evaluate(() => navigator.clipboard.readText());
+    // El portapapeles de Windows devuelve CRLF y el cuadro de texto, LF: solo se admite esa diferencia
+    // (ver comparacion-portapapeles.js). Lo demás se compara de forma estricta, sin recortar nada.
+    const mostrado = await emisor.inputValue('#informe-texto');
+    assert.ok(igualesSalvoCrLf(copiado, mostrado), 'se copia el mismo texto que se muestra');
+    assert.equal(normalizarCrLf(copiado), normalizarCrLf(mostrado));
+    assert.equal(JSON.parse(copiado).rol, 'emisor');
+    comprobarSinDatosSensibles(copiado, JSON.parse(copiado));
+
+    // Generar o copiar el informe no alteró la emisión.
+    const intacto = await diagnostico(emisor);
+    assert.equal(intacto.conexion, 'connected');
+    assert.equal(intacto.pistasLocalesActivas, 2);
+    assert.equal(intacto.flujosLocalesCreados, 1);
+
+    // Después de finalizar: recursos liberados en ambos participantes.
+    await emisor.click('#btn-finalizar');
+    await emisor.waitForSelector('#vista-final:not([hidden])');
+    await espectador.waitForSelector('#vista-final:not([hidden])');
+    const finEmisor = await informe(emisor);
+    comprobarSinDatosSensibles(finEmisor.texto, finEmisor.datos);
+    assert.equal(finEmisor.datos.finalizacion.recursosLiberados, 'si');
+    assert.equal(finEmisor.datos.captura.estado, 'liberada');
+    assert.equal(finEmisor.datos.pistas.localesActivas, 0);
+    assert.equal(finEmisor.datos.metricas.motivo, 'sin-conexion');
+    const finEspectador = await informe(espectador);
+    comprobarSinDatosSensibles(finEspectador.texto, finEspectador.datos);
+    assert.equal(finEspectador.datos.finalizacion.recursosLiberados, 'si');
+    assert.equal(finEspectador.datos.pistas.remotasActivas, 0);
+    assert.equal(finEspectador.datos.reproduccion.estado, 'sin-flujo');
   });
 });

@@ -35,6 +35,14 @@ button {
   cursor: pointer;
 }
 
+textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font: 0.8rem ui-monospace, monospace;
+  padding: 0.4rem;
+}
+
 button.peligro {
   border-color: #b00020;
 }

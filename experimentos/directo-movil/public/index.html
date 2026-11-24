@@ -48,6 +48,20 @@
         <button id="btn-nueva" type="button">Nueva sesión</button>
       </section>
 
+      <section class="informe">
+        <h2>Informe de diagnóstico</h2>
+        <p class="aviso">
+          Resumen técnico para registrar la prueba. No incluye enlaces, tokens, SDP, direcciones IP ni datos de la
+          cámara y el micrófono. Se genera en esta página y no se envía a ningún servidor.
+        </p>
+        <div class="fila">
+          <button id="btn-informe" type="button">Generar informe</button>
+          <button id="btn-copiar-informe" type="button">Copiar informe</button>
+        </div>
+        <p id="estado-informe" role="status"></p>
+        <textarea id="informe-texto" readonly rows="14" spellcheck="false" aria-label="Informe de diagnóstico" hidden></textarea>
+      </section>
+
       <section aria-live="polite" class="estados">
         <h2>Estado</h2>
         <dl>

@@ -1,13 +1,13 @@
-# Plan por fases y flujo de entrega — v1.6
+# Plan por fases y flujo de entrega — v1.7
 
 | Campo | Valor |
 | --- | --- |
-| Versión | 1.6 |
+| Versión | 1.7 |
 | Fase activa | **FASE-03, prueba técnica móvil** |
 | Fase en espera | FASE-02, viabilidad y decisiones del piloto: en espera de validaciones externas, **no cerrada** |
-| Entrega activa | LIVE-FASE03-E01 v1.2, primer directo técnico ejecutable: [experimento directo-movil](../../experimentos/directo-movil/README.md) (única entrega activa). Corrige la v1.0 y la v1.1, no publicadas, tras las revisiones R01 y R02. Preparada; pendiente de auditoría y publicación manual |
+| Entrega activa | LIVE-FASE03-E02 v1.3, kit de validación física del primer directo móvil: informe de diagnóstico del [experimento directo-movil](../../experimentos/directo-movil/README.md) y [protocolo para Android](../expedientes/LIVE-FASE03-E02-protocolo-android.md) (única entrega activa). Corrige la v1.0, la v1.1 y la v1.2, no publicadas, tras las revisiones E02-R01, E02-R02 y E02-R03. Preparada; pendiente de auditoría y publicación manual. LIVE-FASE03-E01 v1.2 está publicada en `7eae89e0b083b26ba3a44f1e22304e32e47c32a5` |
 | Definición de producto | [v0.33](../producto/proyecto-live-definicion-v0.33.md), base original conservada como referencia histórica |
-| Registro de decisiones | [v1.1](../producto/REGISTRO-DECISIONES.md), RD-001 a RD-010; prevalece sobre la v0.33 solo en sus cambios explícitos |
+| Registro de decisiones | [v1.2](../producto/REGISTRO-DECISIONES.md), RD-001 a RD-011; prevalece sobre la v0.33 solo en sus cambios explícitos |
 | Síntesis de investigación | [LIVE-001-resultado-v1.2](../investigacion/LIVE-001-resultado-v1.2.md) |
 | Estado del proyecto | [ESTADO-PROYECTO](ESTADO-PROYECTO.md) |
 
@@ -21,7 +21,8 @@ Historial del plan:
 | 1.3 | LIVE-FASE02-E02, encargo del 18-10-2026; preparación v1.0 ajustada a v1.1 tras la revisión R01 (18-10-2026). v1.1 publicada en `14926d2575acf492afdbfb60a8777eabfa077fcd` el 18-10-2026; preparación terminada | `65378a49c17453aa768ca871819abe6748a03908` | Solo metadatos, historial y seguimiento: E01 v1.1 cerrada y publicada; E02 como única entrega activa, en su v1.1. Sin cambios en fases, criterios, dependencias ni orden |
 | 1.4 | LIVE-FASE02-E03 v1.0, encargo del 18-10-2026; cerrada y publicada en `8128802bbeca0349755776a0383e79853ff8c4b8` el 18-10-2026 | `14926d2575acf492afdbfb60a8777eabfa077fcd` | Respuestas A1, B2, C1, D1 y E1 del promotor a E02 trasladadas al [registro de decisiones](../producto/REGISTRO-DECISIONES.md) (RD-006 a RD-010). Dependencias ajustadas: FASE-03 sin las pruebas exclusivas del cartel QR; FASE-07 con el contenido exclusivo y sin «Cercanos»; FASE-08 sin aportes directos; FASE-10 diferida y fuera de los prerrequisitos de FASE-11 y FASE-12; validación previa y piloto referidos a los componentes incluidos. Entrega activa: E03 v1.0 |
 | 1.5 | LIVE-FASE02-E04, encargo recibido el 18-10-2026; preparación v1.0 ajustada a v1.1 tras la revisión R01 (18-10-2026); v1.1 cerrada y publicada en `4cd3ce453f2bdb8ba34f763e5c87836d4187a683` el 18-10-2026 | `8128802bbeca0349755776a0383e79853ff8c4b8` | Solo metadatos, historial y estado de FASE-02: E03 cerrada y publicada; E04 como única entrega activa, en su v1.1. Sin cambios en fases, objetivos, criterios, dependencias ni excepciones |
-| 1.6 | LIVE-FASE03-E01, encargo recibido el 18-10-2026; preparación v1.0 ajustada a v1.1 tras la revisión R01 y a v1.2 tras la revisión R02 (18-10-2026) | `4cd3ce453f2bdb8ba34f763e5c87836d4187a683` | E04 cerrada y publicada. FASE-02 en espera de validaciones externas, sin cerrar; FASE-03 activa con LIVE-FASE03-E01 como única entrega, en su v1.2. Excepción de secuencia registrada en §2. Sin cambios en las trece fases, sus objetivos, criterios ni dependencias |
+| 1.6 | LIVE-FASE03-E01, encargo recibido el 18-10-2026; preparación v1.0 ajustada a v1.1 tras la revisión R01 y a v1.2 tras la revisión R02 (18-10-2026). v1.2 publicada en `7eae89e0b083b26ba3a44f1e22304e32e47c32a5` | `4cd3ce453f2bdb8ba34f763e5c87836d4187a683` | E04 cerrada y publicada. FASE-02 en espera de validaciones externas, sin cerrar; FASE-03 activa con LIVE-FASE03-E01 como única entrega, en su v1.2. Excepción de secuencia registrada en §2. Sin cambios en las trece fases, sus objetivos, criterios ni dependencias |
+| 1.7 | LIVE-FASE03-E02, encargo del 23-11-2026; preparación v1.0 ajustada a v1.1 tras la revisión E02-R01 a v1.2 tras la revisión E02-R02 y a v1.3 tras la revisión E02-R03 (23-11-2026) | `7eae89e0b083b26ba3a44f1e22304e32e47c32a5` | E01 v1.2 publicada. FASE-03 activa con LIVE-FASE03-E02 como única entrega. Se corrigen las referencias al registro de decisiones (v1.2, RD-001 a RD-011). FASE-02 sigue en espera de validaciones externas y sin cerrar. Sin cambios en las trece fases, sus objetivos, criterios, dependencias ni excepciones |
 
 ## 1. Cambio de forma de trabajo
 

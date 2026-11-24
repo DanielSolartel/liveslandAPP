@@ -20,7 +20,7 @@ Plataforma de transmisiones en vivo y monetización de creadores, con contenido 
 | `docs/producto/` | Definición del producto (copia fiel, con SHA-256) y registro de decisiones del promotor |
 | `docs/encargos/` | Encargos originales LIVE-001, R01 y R02 (copias fieles, con SHA-256) |
 | `docs/investigacion/` | Informes v1.0 y v1.1 (históricos), v1.2 (vigente) y registros de correcciones |
-| `docs/expedientes/` | Entregas de FASE-02, y borradores de alcance de LIVE-002 y de expedientes LIVE-005 y LIVE-006 (preparados, no enviados) |
+| `docs/expedientes/` | Entregas de FASE-02, el protocolo de validación física de FASE-03 en Android, y borradores de alcance de LIVE-002 y de expedientes LIVE-005 y LIVE-006 (preparados, no enviados) |
 | `docs/estado/` | Estado del proyecto y plan por fases |
 | `experimentos/directo-movil/` | Experimento técnico de FASE-03; no es la aplicación de producción |
 

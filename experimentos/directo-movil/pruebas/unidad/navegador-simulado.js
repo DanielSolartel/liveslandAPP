@@ -8,6 +8,19 @@ import { readFileSync } from 'node:fs';
 const HTML = readFileSync(new URL('../../public/index.html', import.meta.url), 'utf8');
 const SDP = 'v=0\r\no=- 1 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\n';
 
+/** Estadísticas de ejemplo: números permitidos y registros con datos de red que el informe no debe copiar. */
+function estadisticasPorDefecto() {
+  return [
+    { type: 'inbound-rtp', kind: 'video', bytesReceived: 5000, packetsReceived: 40, packetsLost: 1, framesDecoded: 30, framesDropped: 2, ssrc: 111 },
+    { type: 'inbound-rtp', kind: 'audio', bytesReceived: 2000, packetsReceived: 50, packetsLost: 0, jitter: 0.004 },
+    { type: 'outbound-rtp', kind: 'video', bytesSent: 6000, packetsSent: 45, framesEncoded: 31 },
+    { type: 'outbound-rtp', kind: 'audio', bytesSent: 2500, packetsSent: 55 },
+    { type: 'candidate-pair', state: 'succeeded', nominated: true, currentRoundTripTime: 0.0125, localCandidateId: 'L1', remoteCandidateId: 'R1' },
+    { type: 'remote-candidate', id: 'R1', ip: SENUELOS.ip, address: SENUELOS.ip, port: 54321, candidate: SENUELOS.candidato, networkType: SENUELOS.red },
+    { type: 'certificate', fingerprint: SENUELOS.huella },
+  ];
+}
+
 /** Copia del fetch de Node, para que la propia prueba hable con el servidor sin pasar por los dobles. */
 export const fetchReal = globalThis.fetch.bind(globalThis);
 
@@ -45,7 +58,17 @@ class BotonSimulado extends ElementoSimulado {
 
 class EntradaSimulada extends ElementoSimulado {
   value = '';
-  select() {}
+  seleccionado = false;
+  select() {
+    this.seleccionado = true;
+  }
+}
+
+class AreaTextoSimulada extends EntradaSimulada {
+  enfocado = false;
+  focus() {
+    this.enfocado = true;
+  }
 }
 
 class VideoSimulado extends ElementoSimulado {
@@ -72,12 +95,55 @@ class VideoSimulado extends ElementoSimulado {
   }
 }
 
+/** Valores señuelo: ningún informe de diagnóstico puede contenerlos. */
+export const SENUELOS = Object.freeze({
+  dispositivo: 'SENUELO-DISPOSITIVO-ID',
+  grupo: 'SENUELO-GRUPO-ID',
+  etiqueta: 'SENUELO-ETIQUETA-CAMARA',
+  ip: '203.0.113.77',
+  candidato: 'candidate:1 1 udp 2122260223 203.0.113.77 54321 typ host',
+  huella: 'SENUELO-HUELLA-DTLS',
+  red: 'SENUELO-NOMBRE-RED',
+  error: 'SENUELO-MENSAJE-DE-ERROR',
+});
+
+/** Ajustes que devuelve `getSettings()`: los permitidos y, mezclados, datos de dispositivo que no deben salir. */
+const AJUSTES_POR_DEFECTO = Object.freeze({
+  video: {
+    width: 1280,
+    height: 720,
+    frameRate: 29.97,
+    aspectRatio: 1.7777,
+    facingMode: 'environment',
+    deviceId: SENUELOS.dispositivo,
+    groupId: SENUELOS.grupo,
+    label: SENUELOS.etiqueta,
+  },
+  audio: {
+    sampleRate: 48000,
+    channelCount: 2,
+    echoCancellation: true,
+    deviceId: SENUELOS.dispositivo,
+    groupId: SENUELOS.grupo,
+    label: SENUELOS.etiqueta,
+  },
+});
+
 /** Pista simulada: `stop()` la deja en `ended`, como en un navegador. */
 class PistaSimulada {
-  /** @param {string} kind */
-  constructor(kind) {
+  /**
+   * @param {string} kind
+   * @param {Record<string, unknown>} [ajustes]
+   */
+  constructor(kind, ajustes = /** @type {Record<string, Record<string, unknown>>} */ (AJUSTES_POR_DEFECTO)[kind] ?? {}) {
     this.kind = kind;
     this.readyState = 'live';
+    this.muted = false;
+    this.ajustes = ajustes;
+  }
+
+  getSettings() {
+    return { ...this.ajustes };
   }
 
   stop() {
@@ -121,7 +187,15 @@ function construirDocumento() {
     if (!id) continue;
     const seccion = nombre === 'section' ? null : (secciones.at(-1) ?? null);
     const Clase =
-      nombre === 'button' ? BotonSimulado : nombre === 'input' ? EntradaSimulada : nombre === 'video' ? VideoSimulado : ElementoSimulado;
+      nombre === 'button'
+        ? BotonSimulado
+        : nombre === 'input'
+          ? EntradaSimulada
+          : nombre === 'textarea'
+            ? AreaTextoSimulada
+            : nombre === 'video'
+              ? VideoSimulado
+              : ElementoSimulado;
     elementos.set(id, new Clase(id, nombre, atributos, seccion));
   }
   return elementos;
@@ -168,6 +242,15 @@ export function instalarNavegador({ base, url = '/' }) {
       this.configuracion = configuracion;
       this.connectionState = 'new';
       this.iceConnectionState = 'new';
+      this.signalingState = 'stable';
+      /** Registros que devuelve `getStats()`, con datos que el informe no debe copiar. */
+      this.estadisticas = estadisticasPorDefecto();
+      /** Si es `true`, `getStats()` rechaza. */
+      this.fallaEstadisticas = false;
+      /** Si es `true`, `getStats()` queda pendiente hasta que la prueba la resuelva o la rechace. */
+      this.retenerEstadisticas = false;
+      /** @type {{ resolver: (registros?: unknown[]) => void, rechazar: () => void }[]} */
+      this.estadisticasPendientes = [];
       /** @type {{ type: string, sdp?: string } | null} */
       this.localDescription = null;
       /** @type {{ type: string, sdp?: string } | null} */
@@ -223,7 +306,18 @@ export function instalarNavegador({ base, url = '/' }) {
     }
 
     async getStats() {
-      return new Map();
+      if (this.fallaEstadisticas) throw new Error(SENUELOS.error);
+      /** @param {unknown[]} registros */
+      const informe = (registros) => new Map(registros.map((registro, i) => [String(i), registro]));
+      if (this.retenerEstadisticas) {
+        return new Promise((resolve, reject) => {
+          this.estadisticasPendientes.push({
+            resolver: (registros = this.estadisticas) => resolve(informe(registros)),
+            rechazar: () => reject(new Error(SENUELOS.error)),
+          });
+        });
+      }
+      return informe(this.estadisticas);
     }
 
     /** Simula que la conexión se estableció. */
@@ -247,6 +341,51 @@ export function instalarNavegador({ base, url = '/' }) {
       this.iceConnectionState = 'closed';
     }
   }
+
+  /** @type {string[]} */
+  const copiados = [];
+  /** Escrituras pendientes del modo `retiene`: la prueba decide cuándo y cómo terminan. */
+  /** @type {{ texto: string, resolver: () => void, rechazar: () => void }[]} */
+  const escrituras = [];
+  /** Veces que la página llamó a `writeText`, terminen o no. */
+  let intentosEscritura = 0;
+  /** @type {'ok' | 'rechaza' | 'ausente' | 'retiene'} */
+  let modoPortapapeles = 'ok';
+  const navegador = {
+    mediaDevices: /** @type {unknown} */ (null),
+    userAgent: 'Mozilla/5.0 (Linux; Android 14; K) AppleWebKit/537.36 Chrome/158.0.0.0 Mobile Safari/537.36',
+    platform: 'Linux armv81',
+    /** @type {{ platform?: string, brands?: { brand: string, version: string }[] } | undefined} */
+    userAgentData: undefined,
+    clipboard: /** @type {{ writeText: (t: string) => Promise<void> } | undefined} */ (undefined),
+  };
+  /** @param {'ok' | 'rechaza' | 'ausente' | 'retiene'} modo */
+  function configurarPortapapeles(modo) {
+    modoPortapapeles = modo;
+    navegador.clipboard =
+      modo === 'ausente'
+        ? undefined
+        : {
+            async writeText(texto) {
+              intentosEscritura += 1;
+              if (modoPortapapeles === 'retiene') {
+                return new Promise((resolve, reject) => {
+                  escrituras.push({
+                    texto,
+                    resolver: () => {
+                      copiados.push(texto);
+                      resolve();
+                    },
+                    rechazar: () => reject(new DOMException(SENUELOS.error, 'NotAllowedError')),
+                  });
+                });
+              }
+              if (modoPortapapeles === 'rechaza') throw new DOMException(SENUELOS.error, 'NotAllowedError');
+              copiados.push(texto);
+            },
+          };
+  }
+  configurarPortapapeles('ok');
 
   const mediaDevices = {
     /** @param {unknown} _restricciones */
@@ -300,6 +439,8 @@ export function instalarNavegador({ base, url = '/' }) {
     return fetchReal(destino, opciones);
   }
 
+  navegador.mediaDevices = mediaDevices;
+
   const ventana = {
     isSecureContext: true,
     /**
@@ -315,14 +456,15 @@ export function instalarNavegador({ base, url = '/' }) {
 
   const globales = {
     window: ventana,
-    document: { getElementById: (/** @type {string} */ id) => elementos.get(id) ?? null },
-    navigator: { mediaDevices },
+    document: { getElementById: (/** @type {string} */ id) => elementos.get(id) ?? null, visibilityState: 'visible' },
+    navigator: navegador,
     location: { origin: direccion.origin, search: direccion.search, hash: direccion.hash },
     history: { replaceState() {} },
     fetch: fetchSimulado,
     HTMLElement: ElementoSimulado,
     HTMLButtonElement: BotonSimulado,
     HTMLInputElement: EntradaSimulada,
+    HTMLTextAreaElement: AreaTextoSimulada,
     HTMLVideoElement: VideoSimulado,
     RTCPeerConnection: ConexionSimulada,
     MediaStream: FlujoSimulado,
@@ -371,6 +513,11 @@ export function instalarNavegador({ base, url = '/' }) {
       return boton instanceof BotonSimulado && !boton.disabled;
     },
     capturas,
+    copiados,
+    escrituras,
+    intentosEscritura: () => intentosEscritura,
+    configurarPortapapeles,
+    navegador,
     flujos,
     conexiones,
     retenidas,
