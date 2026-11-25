@@ -39,9 +39,10 @@ export async function esperar(condicion, ms = 3000, descripcion = 'condición') 
  *   abrir: (url?: string) => Promise<Pagina>,
  *   participante: (sesion: string, token: string) => Participante,
  * }) => Promise<void>} cuerpo
+ * @param {import('../../src/servidor.js').OpcionesServidor} [opciones] Opciones adicionales del servidor (E03).
  */
-export async function conServidor(cuerpo) {
-  const app = crearServidor({ barridoMs: 20, latidoMs: 50 });
+export async function conServidor(cuerpo, opciones = {}) {
+  const app = crearServidor({ barridoMs: 20, latidoMs: 50, ...opciones });
   /** @type {(() => void)[]} */
   const limpiezas = [];
   try {
@@ -98,6 +99,15 @@ export async function crearSesionEnPagina(pagina) {
 export const cuenta = (p, evento, filtro = () => true) => p.eventos.filter((e) => e.evento === evento && filtro(e.datos)).length;
 
 /**
+ * Identificador de negociación de la última oferta recibida por un participante (E03).
+ * @param {Participante} p
+ * @returns {number | undefined}
+ */
+export function ultimaNegociacion(p) {
+  return p.eventos.filter((e) => e.evento === 'senal' && e.datos?.tipo === 'oferta').at(-1)?.datos?.neg;
+}
+
+/**
  * Emisor con captura activa y un espectador (la prueba) con oferta y respuesta intercambiadas.
  * @param {Pagina} pagina
  * @param {(sesion: string, token: string) => Participante} participante
@@ -109,7 +119,8 @@ export async function emisorConEspectador(pagina, participante) {
   await esperar(() => pagina.texto('estado-medios').includes('activos'), 3000, 'captura activa');
   const espectador = participante(datos.sesion, datos.tokenEspectador);
   await esperar(() => cuenta(espectador, 'senal', (d) => d.tipo === 'oferta'), 3000, 'oferta recibida');
-  assert.equal((await espectador.canal.enviar({ tipo: 'respuesta', sdp: SDP })).ok, true);
+  // E03: la respuesta lleva el identificador de negociación de la oferta, como la que envía la página real.
+  assert.equal((await espectador.canal.enviar({ tipo: 'respuesta', sdp: SDP, neg: ultimaNegociacion(espectador) })).ok, true);
   const pc = /** @type {any} */ (pagina.conexiones.at(-1));
   await esperar(() => pc.remoteDescription, 3000, 'respuesta aplicada');
   pc.conectar();

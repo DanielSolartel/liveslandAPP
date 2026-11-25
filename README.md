@@ -2,7 +2,7 @@
 
 Plataforma de transmisiones en vivo y monetización de creadores, con contenido para adultos. Según el [registro de decisiones](docs/producto/REGISTRO-DECISIONES.md), el primer piloto incluye las transmisiones en vivo y el contenido exclusivo de los perfiles. Los juegos con monedas, los aportes directos en dinero, las campañas QR remuneradas y «Cercanos» quedan para después del primer piloto. El primer mercado de recargas y retiros es Colombia.
 
-**Etapa actual: FASE-03, prueba técnica móvil**, con FASE-02 en espera de validaciones externas y sin cerrar. La validación física en Android de LIVE-FASE03-E02 se ejecutó y su auditoría fue favorable con reservas; el [expediente de resultados](docs/expedientes/LIVE-FASE03-E02-resultados-android.md) está preparado y su publicación y la decisión sobre el Issue #2 son manuales y están pendientes. FASE-03 sigue activa. La aplicación de producción todavía **no está implementada**. Existe un experimento técnico de emisión interna, de un emisor a un espectador, en [experimentos/directo-movil](experimentos/directo-movil/README.md), con instrucciones para ejecutarlo. La investigación documental LIVE-001 se cerró en FASE-01; sus conclusiones jurídicas y contractuales siguen siendo **provisionales**. Las decisiones de alcance no autorizan cobros ni pagos reales.
+**Etapa actual: FASE-03, prueba técnica móvil**, con FASE-02 en espera de validaciones externas y sin cerrar. LIVE-FASE03-E02 está cerrada: su validación física en Android se publicó con el [expediente de resultados](docs/expedientes/LIVE-FASE03-E02-resultados-android.md) y el Issue #2 está cerrado. La entrega activa es **LIVE-FASE03-E03**: diagnóstico de continuidad, estados visibles y recuperación manual controlada del directo móvil, autorizada por el promotor. Está preparada y pendiente de auditoría y publicación manual, y su protocolo físico no se ha ejecutado. FASE-03 sigue activa y FASE-04 no está autorizada. La aplicación de producción todavía **no está implementada**. Existe un experimento técnico de emisión interna, de un emisor a un espectador, en [experimentos/directo-movil](experimentos/directo-movil/README.md), con instrucciones para ejecutarlo. La investigación documental LIVE-001 se cerró en FASE-01; sus conclusiones jurídicas y contractuales siguen siendo **provisionales**. Las decisiones de alcance no autorizan cobros ni pagos reales.
 
 ## Empieza aquí
 
@@ -20,7 +20,7 @@ Plataforma de transmisiones en vivo y monetización de creadores, con contenido 
 | `docs/producto/` | Definición del producto (copia fiel, con SHA-256) y registro de decisiones del promotor |
 | `docs/encargos/` | Encargos originales LIVE-001, R01 y R02 (copias fieles, con SHA-256) |
 | `docs/investigacion/` | Informes v1.0 y v1.1 (históricos), v1.2 (vigente) y registros de correcciones |
-| `docs/expedientes/` | Entregas de FASE-02, el protocolo de validación física de FASE-03 en Android y el expediente de resultados de E02 con su manifiesto de huellas, y borradores de alcance de LIVE-002 y de expedientes LIVE-005 y LIVE-006 (preparados, no enviados) |
+| `docs/expedientes/` | Entregas de FASE-02, el protocolo de validación física de FASE-03 en Android y el expediente de resultados de E02 con su manifiesto de huellas, el diseño y el protocolo de continuidad de E03, y borradores de alcance de LIVE-002 y de expedientes LIVE-005 y LIVE-006 (preparados, no enviados) |
 | `docs/estado/` | Estado del proyecto y plan por fases |
 | `experimentos/directo-movil/` | Experimento técnico de FASE-03; no es la aplicación de producción |
 

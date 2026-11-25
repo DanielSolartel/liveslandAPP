@@ -43,6 +43,18 @@
         <video id="video-remoto" autoplay playsinline></video>
       </section>
 
+      <section id="vista-continuidad" hidden>
+        <h2>Continuidad</h2>
+        <p class="aviso">
+          Si se interrumpe la conexión, puedes reintentarla dentro de la misma sesión. El reintento solo empieza
+          cuando lo pulsas y comprueba que los medios avanzan; no crea una sesión nueva ni alarga su caducidad.
+        </p>
+        <div class="fila">
+          <button id="btn-reintentar" type="button" disabled>Reintentar conexión</button>
+        </div>
+        <p id="estado-recuperacion" role="status"></p>
+      </section>
+
       <section id="vista-final" hidden>
         <p id="texto-final"></p>
         <button id="btn-nueva" type="button">Nueva sesión</button>
@@ -62,6 +74,22 @@
         <textarea id="informe-texto" readonly rows="14" spellcheck="false" aria-label="Informe de diagnóstico" hidden></textarea>
       </section>
 
+      <section class="informe">
+        <h2>Cronología de continuidad</h2>
+        <p class="aviso">
+          Registro de eventos de esta página (visibilidad, red, captura, señalización, conexión y recuperación),
+          con tiempos relativos y sin enlaces, tokens, SDP, direcciones IP ni datos de dispositivos. Vive en la
+          memoria de esta página: no se envía a ningún servidor y se pierde si el navegador recarga o descarta la
+          página. Conserva como máximo 256 eventos.
+        </p>
+        <div class="fila">
+          <button id="btn-cronologia" type="button">Generar cronología</button>
+          <button id="btn-copiar-cronologia" type="button">Copiar cronología</button>
+        </div>
+        <p id="estado-cronologia" role="status"></p>
+        <textarea id="cronologia-texto" readonly rows="14" spellcheck="false" aria-label="Cronología de continuidad" hidden></textarea>
+      </section>
+
       <section aria-live="polite" class="estados">
         <h2>Estado</h2>
         <dl>
@@ -70,6 +98,11 @@
           <dt>Conexión</dt><dd id="estado-conexion">—</dd>
           <dt>ICE</dt><dd id="estado-ice">—</dd>
           <dt>Medios</dt><dd id="estado-medios">—</dd>
+          <dt>Sesión</dt><dd id="estado-sesion">—</dd>
+          <dt>Participante</dt><dd id="estado-par">—</dd>
+          <dt>Pistas</dt><dd id="estado-pistas">—</dd>
+          <dt>Reproducción</dt><dd id="estado-reproduccion">—</dd>
+          <dt>Continuidad</dt><dd id="estado-continuidad">—</dd>
         </dl>
         <p id="mensaje-error" class="error" role="alert" hidden></p>
       </section>

@@ -28,6 +28,9 @@ const ARCHIVOS_PUBLICOS = {
   '/app.js': ['app.js', 'text/javascript; charset=utf-8'],
   '/medios.js': ['medios.js', 'text/javascript; charset=utf-8'],
   '/senalizacion.js': ['senalizacion.js', 'text/javascript; charset=utf-8'],
+  // LIVE-FASE03-E03: cronología de continuidad y estados visibles. Lista cerrada: no se sirve nada más.
+  '/cronologia.js': ['cronologia.js', 'text/javascript; charset=utf-8'],
+  '/continuidad.js': ['continuidad.js', 'text/javascript; charset=utf-8'],
   '/estilos.css': ['estilos.css', 'text/css; charset=utf-8'],
 };
 
@@ -202,7 +205,9 @@ export function crearServidor(opciones = {}) {
     req.on('close', () => {
       canal.detener();
       if (almacen.desconectar(sesion, rol, canal)) {
-        sesion.canales[rolContrario(rol)]?.enviar('par', { presente: false });
+        // El flujo se cerró sin una salida registrada: el servidor no sabe si fue una pérdida de red, una página
+        // cerrada o un fin cuyo aviso no llegó. `desconexion` no afirma ninguna de esas causas.
+        sesion.canales[rolContrario(rol)]?.enviar('par', { presente: false, motivo: 'desconexion' });
       }
     });
   }
@@ -261,7 +266,7 @@ export function crearServidor(opciones = {}) {
       if (canal && almacen.desconectar(sesion, 'espectador', canal)) {
         canal.enviar('fin', { motivo: 'salida-del-espectador' });
         canal.cerrar();
-        sesion.canales.emisor?.enviar('par', { presente: false });
+        sesion.canales.emisor?.enviar('par', { presente: false, motivo: 'salida' });
       }
       responderJson(res, 200, { ok: true });
       return;

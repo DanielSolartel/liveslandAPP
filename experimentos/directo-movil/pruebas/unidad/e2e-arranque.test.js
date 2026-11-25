@@ -8,7 +8,8 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const RAIZ = fileURLToPath(new URL('../../', import.meta.url));
-const ARCHIVO_E2E = 'pruebas/e2e/recorrido.test.js';
+// E03 añade pruebas/e2e/continuidad.test.js: se comprueba cada archivo de la batería con el mismo criterio.
+const ARCHIVOS_E2E = ['pruebas/e2e/recorrido.test.js', 'pruebas/e2e/continuidad.test.js'];
 const ESPERA_MAXIMA_MS = 30_000;
 const WINDOWS = process.platform === 'win32';
 
@@ -22,7 +23,8 @@ function detenerArbol(hijo) {
   else process.kill(-hijo.pid, 'SIGKILL');
 }
 
-test('con un navegador inexistente, la batería del navegador falla con diagnóstico y termina sola', async () => {
+for (const ARCHIVO_E2E of ARCHIVOS_E2E) {
+test(`con un navegador inexistente, la batería del navegador falla con diagnóstico y termina sola (${ARCHIVO_E2E})`, async () => {
   const pruebas = readFileSync(new URL(`../../${ARCHIVO_E2E}`, import.meta.url), 'utf8').match(/^test\(/gm)?.length ?? 0;
   assert.ok(pruebas > 0);
   /** @type {NodeJS.ProcessEnv} */
@@ -53,3 +55,4 @@ test('con un navegador inexistente, la batería del navegador falla con diagnós
   assert.match(salida, /^# skipped 0$/m, 'ninguna se omite');
   assert.match(salida, /No se pudo arrancar el navegador de la prueba \(DIRECTO_CHROMIUM=\/ruta\/inexistente\/chromium\)/);
 });
+}

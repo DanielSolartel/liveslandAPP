@@ -3,18 +3,25 @@
 // una captura que la prueba resuelve cuando quiere, una RTCPeerConnection simulada y un fetch que llega al
 // servidor real del experimento salvo las peticiones que la prueba decide retener.
 // No es un navegador: no hay WebRTC, códecs, permisos ni dispositivos reales. Eso lo cubre pruebas/e2e/.
+// E03 añade: transiciones de `signalingState`, eventos de pistas (mute, unmute, ended), eventos de la página
+// (visibilidad, freeze, resume, pageshow, pagehide, online, offline), estadísticas que avanzan o se detienen,
+// y control del flujo de eventos SSE para cortarlo (EOF o error) o para fallar, retener o rechazar su apertura.
 import { readFileSync } from 'node:fs';
 
 const HTML = readFileSync(new URL('../../public/index.html', import.meta.url), 'utf8');
 const SDP = 'v=0\r\no=- 1 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\n';
 
-/** Estadísticas de ejemplo: números permitidos y registros con datos de red que el informe no debe copiar. */
-function estadisticasPorDefecto() {
+/**
+ * Estadísticas de ejemplo: números permitidos y registros con datos de red que el informe no debe copiar.
+ * @param {number} [avance] Lecturas anteriores: con `avance` > 0 los contadores crecen (medios que avanzan).
+ */
+function estadisticasPorDefecto(avance = 0) {
+  const k = avance * 100;
   return [
-    { type: 'inbound-rtp', kind: 'video', bytesReceived: 5000, packetsReceived: 40, packetsLost: 1, framesDecoded: 30, framesDropped: 2, ssrc: 111 },
-    { type: 'inbound-rtp', kind: 'audio', bytesReceived: 2000, packetsReceived: 50, packetsLost: 0, jitter: 0.004 },
-    { type: 'outbound-rtp', kind: 'video', bytesSent: 6000, packetsSent: 45, framesEncoded: 31 },
-    { type: 'outbound-rtp', kind: 'audio', bytesSent: 2500, packetsSent: 55 },
+    { type: 'inbound-rtp', kind: 'video', bytesReceived: 5000 + k, packetsReceived: 40 + k, packetsLost: 1, framesDecoded: 30 + k, framesDropped: 2, ssrc: 111 },
+    { type: 'inbound-rtp', kind: 'audio', bytesReceived: 2000 + k, packetsReceived: 50 + k, packetsLost: 0, jitter: 0.004 },
+    { type: 'outbound-rtp', kind: 'video', bytesSent: 6000 + k, packetsSent: 45 + k, framesEncoded: 31 + k },
+    { type: 'outbound-rtp', kind: 'audio', bytesSent: 2500 + k, packetsSent: 55 + k },
     { type: 'candidate-pair', state: 'succeeded', nominated: true, currentRoundTripTime: 0.0125, localCandidateId: 'L1', remoteCandidateId: 'R1' },
     { type: 'remote-candidate', id: 'R1', ip: SENUELOS.ip, address: SENUELOS.ip, port: 54321, candidate: SENUELOS.candidato, networkType: SENUELOS.red },
     { type: 'certificate', fingerprint: SENUELOS.huella },
@@ -129,13 +136,53 @@ const AJUSTES_POR_DEFECTO = Object.freeze({
   },
 });
 
-/** Pista simulada: `stop()` la deja en `ended`, como en un navegador. */
-class PistaSimulada {
+/** Destino de eventos mínimo, como `EventTarget`. */
+class DestinoSimulado {
+  constructor() {
+    /** @type {Map<string, Set<(e: unknown) => void>>} */
+    this.oyentesEventos = new Map();
+  }
+
+  /**
+   * @param {string} tipo
+   * @param {(e: unknown) => void} oyente
+   */
+  addEventListener(tipo, oyente) {
+    const lista = this.oyentesEventos.get(tipo) ?? new Set();
+    lista.add(oyente);
+    this.oyentesEventos.set(tipo, lista);
+  }
+
+  /**
+   * @param {string} tipo
+   * @param {(e: unknown) => void} oyente
+   */
+  removeEventListener(tipo, oyente) {
+    this.oyentesEventos.get(tipo)?.delete(oyente);
+  }
+
+  /**
+   * @param {string} tipo
+   * @param {Record<string, unknown>} [datos]
+   */
+  emitir(tipo, datos = {}) {
+    for (const oyente of [...(this.oyentesEventos.get(tipo) ?? [])]) oyente({ type: tipo, ...datos });
+  }
+
+  /** @param {string} tipo */
+  oyentes(tipo) {
+    return this.oyentesEventos.get(tipo)?.size ?? 0;
+  }
+}
+
+/** Pista simulada: `stop()` la deja en `ended` sin emitir `ended`, como en un navegador. */
+class PistaSimulada extends DestinoSimulado {
   /**
    * @param {string} kind
    * @param {Record<string, unknown>} [ajustes]
    */
   constructor(kind, ajustes = /** @type {Record<string, Record<string, unknown>>} */ (AJUSTES_POR_DEFECTO)[kind] ?? {}) {
+    super();
     this.kind = kind;
     this.readyState = 'live';
     this.muted = false;
@@ -148,6 +195,23 @@ class PistaSimulada {
 
   stop() {
     this.readyState = 'ended';
+  }
+
+  /** El sistema silencia la pista (por ejemplo, pantalla bloqueada). */
+  silenciar() {
+    this.muted = true;
+    this.emitir('mute');
+  }
+
+  reanudar() {
+    this.muted = false;
+    this.emitir('unmute');
+  }
+
+  /** El sistema termina la pista (por ejemplo, permiso revocado): `ended` sí se emite. */
+  terminar() {
+    this.readyState = 'ended';
+    this.emitir('ended');
   }
 }
 
@@ -245,6 +309,12 @@ export function instalarNavegador({ base, url = '/' }) {
       this.signalingState = 'stable';
       /** Registros que devuelve `getStats()`, con datos que el informe no debe copiar. */
       this.estadisticas = estadisticasPorDefecto();
+      /**
+       * E03: si es `true`, cada `getStats()` devuelve contadores mayores que la anterior (medios que avanzan);
+       * si es `false`, los mismos (medios detenidos). Se fija con `avanzarMedios`.
+       */
+      this.mediosAvanzan = medios.avanzan;
+      this.lecturas = 0;
       /** Si es `true`, `getStats()` rechaza. */
       this.fallaEstadisticas = false;
       /** Si es `true`, `getStats()` queda pendiente hasta que la prueba la resuelva o la rechace. */
@@ -266,6 +336,11 @@ export function instalarNavegador({ base, url = '/' }) {
       this.onconnectionstatechange = null;
       /** @type {(() => void) | null} */
       this.oniceconnectionstatechange = null;
+      /** @type {(() => void) | null} */
+      this.onsignalingstatechange = null;
+      /** Candidatos ICE recibidos (`addIceCandidate`), en orden. */
+      /** @type {unknown[]} */
+      this.candidatosRecibidos = [];
       conexiones.push(this);
     }
 
@@ -279,34 +354,77 @@ export function instalarNavegador({ base, url = '/' }) {
       this.pistas.push(pista);
     }
 
+    /**
+     * Si la prueba retiene ese paso (E03), espera a `liberarNegociacion()`. Al reanudar, una conexión cerrada
+     * mientras tanto rechaza como en un navegador.
+     * @param {'oferta' | 'remota' | 'respuesta' | 'local'} paso
+     */
+    async esperarPaso(paso) {
+      if (!retencion[paso]) return;
+      await new Promise((resolve) => pasosRetenidos.push(() => resolve(undefined)));
+      this.comprobarAbierta();
+    }
+
     async createOffer() {
       this.comprobarAbierta();
+      await this.esperarPaso('oferta');
       return { type: 'offer', sdp: SDP };
     }
 
     async createAnswer() {
       this.comprobarAbierta();
+      await this.esperarPaso('respuesta');
       return { type: 'answer', sdp: SDP };
+    }
+
+    /** @param {string} nuevo */
+    cambiarSenalizacion(nuevo) {
+      if (this.signalingState === nuevo) return;
+      this.signalingState = nuevo;
+      this.onsignalingstatechange?.();
     }
 
     /** @param {{ type: string, sdp?: string }} descripcion */
     async setLocalDescription(descripcion) {
       this.comprobarAbierta();
+      await this.esperarPaso('local');
       this.localDescription = descripcion;
+      this.cambiarSenalizacion(descripcion.type === 'offer' ? 'have-local-offer' : 'stable');
     }
 
     /** @param {{ type: string, sdp?: string }} descripcion */
     async setRemoteDescription(descripcion) {
       this.comprobarAbierta();
+      await this.esperarPaso('remota');
+      if (descripcion.type === 'answer' && this.signalingState !== 'have-local-offer') {
+        throw new DOMException('Respuesta sin oferta local.', 'InvalidStateError');
+      }
       this.remoteDescription = descripcion;
+      this.cambiarSenalizacion(descripcion.type === 'offer' ? 'have-remote-offer' : 'stable');
     }
 
-    async addIceCandidate() {
+    /** @param {unknown} candidato */
+    async addIceCandidate(candidato) {
       this.comprobarAbierta();
+      this.candidatosRecibidos.push(candidato);
+    }
+
+    /**
+     * Simula un candidato ICE local de esta conexión.
+     * @param {string} [texto]
+     */
+    generarCandidato(texto = SENUELOS.candidato) {
+      this.onicecandidate?.({
+        candidate: { toJSON: () => ({ candidate: texto, sdpMid: '0', sdpMLineIndex: 0, usernameFragment: 'ufrag' }) },
+      });
     }
 
     async getStats() {
       if (this.fallaEstadisticas) throw new Error(SENUELOS.error);
+      if (this.mediosAvanzan) {
+        this.lecturas += 1;
+        this.estadisticas = estadisticasPorDefecto(this.lecturas);
+      }
       /** @param {unknown[]} registros */
       const informe = (registros) => new Map(registros.map((registro, i) => [String(i), registro]));
       if (this.retenerEstadisticas) {
@@ -328,6 +446,17 @@ export function instalarNavegador({ base, url = '/' }) {
       this.oniceconnectionstatechange?.();
     }
 
+    /**
+     * Simula una pérdida del transporte: `disconnected` (transitoria) o `failed`.
+     * @param {'disconnected' | 'failed'} [nuevo]
+     */
+    perderTransporte(nuevo = 'disconnected') {
+      this.connectionState = nuevo;
+      this.iceConnectionState = nuevo;
+      this.onconnectionstatechange?.();
+      this.oniceconnectionstatechange?.();
+    }
+
     /** Simula la llegada de audio y video del emisor. Devuelve el flujo remoto. */
     recibirMedios() {
       const flujo = new FlujoSimulado([new PistaSimulada('video'), new PistaSimulada('audio')]);
@@ -339,8 +468,19 @@ export function instalarNavegador({ base, url = '/' }) {
       this.cerrada = true;
       this.connectionState = 'closed';
       this.iceConnectionState = 'closed';
+      this.signalingState = 'closed';
     }
   }
+
+  /**
+   * Estado común de las estadísticas simuladas: las conexiones nuevas heredan `avanzan`. Por defecto `false`,
+   * para que las pruebas de E01/E02 sigan leyendo exactamente los mismos registros.
+   */
+  const medios = { avanzan: false };
+  /** Pasos de negociación que la prueba retiene (E03) y sus esperas pendientes. */
+  const retencion = { oferta: false, remota: false, respuesta: false, local: false };
+  /** @type {(() => void)[]} */
+  const pasosRetenidos = [];
 
   /** @type {string[]} */
   const copiados = [];
@@ -409,11 +549,150 @@ export function instalarNavegador({ base, url = '/' }) {
   };
 
   /**
+   * Flujos de eventos (SSE) abiertos por la página. `cortar('eof')` termina el flujo para la página como si el
+   * servidor lo hubiera cerrado, y `cortar('error')` lo rompe; en ambos casos la conexión real con el servidor
+   * sigue abierta (el servidor conserva el canal: un caso semiabierto) hasta `liberarServidor()`.
+   * @typedef {{ cortar: (modo: 'eof' | 'error') => void, liberarServidor: () => void, cortado: boolean }} FlujoEventos
+   */
+  /** @type {FlujoEventos[]} */
+  const flujosEventos = [];
+  /**
+   * Decide cómo responde la próxima apertura del flujo de eventos: `null` (servidor real), `red` (error de
+   * red), `retener` (sin respuesta hasta que la página la cancele), un estado HTTP (respuesta de error), un
+   * estado HTTP con código de error (`{ estado, error }`, E03-R01) o `sin-bienvenida` (HTTP 200 con el flujo
+   * abierto y sin ningún evento, E03-R01).
+   * @typedef {null | 'red' | 'retener' | 'sin-bienvenida' | 'sin-bienvenida-tardia' | number | { estado: number, error: string }} ModoApertura
+   * @type {() => ModoApertura}
+   */
+  let aperturaEventos = () => null;
+  let aperturasEventos = 0;
+  /** Aperturas `sin-bienvenida`: si la página las canceló. */
+  /** @type {{ cancelada: boolean, inyectar: (evento: string, datos: unknown) => boolean, cerrar: () => void }[]} */
+  const aperturasSinBienvenida = [];
+
+  /**
+   * @param {URL} destino
+   * @param {RequestInit} opciones
+   */
+  async function abrirEventosSimulado(destino, opciones) {
+    aperturasEventos += 1;
+    const modo = aperturaEventos();
+    if (modo === 'red') throw new TypeError('fetch failed');
+    if (modo === 'retener') {
+      return new Promise((_resolve, reject) => {
+        opciones.signal?.addEventListener('abort', () => reject(new DOMException('Petición cancelada.', 'AbortError')));
+      });
+    }
+    if (typeof modo === 'number') {
+      return new Response(JSON.stringify({ error: 'simulado' }), { status: modo, headers: { 'Content-Type': 'application/json' } });
+    }
+    if (modo !== null && typeof modo === 'object') {
+      return new Response(JSON.stringify({ error: modo.error }), { status: modo.estado, headers: { 'Content-Type': 'application/json' } });
+    }
+    if (modo === 'sin-bienvenida' || modo === 'sin-bienvenida-tardia') {
+      // `sin-bienvenida-tardia` (E03-R02): la cancelación de la página no corta el flujo, y la prueba puede
+      // inyectar después eventos (por ejemplo, un `fin` atrasado) en ese canal ya abandonado.
+      const tardia = modo === 'sin-bienvenida-tardia';
+      /** @type {{ cancelada: boolean, inyectar: (evento: string, datos: unknown) => boolean, cerrar: () => void }} */
+      const abierta = { cancelada: false, inyectar: () => false, cerrar: () => {} };
+      aperturasSinBienvenida.push(abierta);
+      const codificador = new TextEncoder();
+      const cuerpo = new ReadableStream({
+        start(c) {
+          abierta.inyectar = (evento, datos) => {
+            try {
+              c.enqueue(codificador.encode(`event: ${evento}\ndata: ${JSON.stringify(datos)}\n\n`));
+              return true;
+            } catch {
+              return false;
+            }
+          };
+          // E03-R03: EOF del flujo (sin evento fin), como si el servidor o la red lo cortaran.
+          abierta.cerrar = () => {
+            try {
+              c.close();
+            } catch {
+              // ya cerrado
+            }
+          };
+          opciones.signal?.addEventListener('abort', () => {
+            abierta.cancelada = true;
+            if (tardia) return;
+            try {
+              c.error(new DOMException('Petición cancelada.', 'AbortError'));
+            } catch {
+              // ya cerrado
+            }
+          });
+        },
+        cancel() {
+          abierta.cancelada = true;
+        },
+      });
+      return new Response(cuerpo, { status: 200, headers: { 'Content-Type': 'text/event-stream' } });
+    }
+    const controlReal = new AbortController();
+    // Una vez cortado el flujo, la red de la página ya no llega al servidor: cancelar la petición en la página
+    // no cierra la conexión del servidor (caso semiabierto) hasta `liberarServidor()`.
+    /** @type {{ cortado: boolean }} */
+    const corte = { cortado: false };
+    opciones.signal?.addEventListener('abort', () => {
+      if (!corte.cortado) controlReal.abort();
+    });
+    const respuesta = await fetchReal(destino, { ...opciones, signal: controlReal.signal });
+    if (!respuesta.ok || !respuesta.body) return respuesta;
+    const lectorReal = respuesta.body.getReader();
+    /** @type {ReadableStreamDefaultController<Uint8Array> | null} */
+    let controlador = null;
+    /** @type {FlujoEventos} */
+    const flujo = {
+      cortado: false,
+      cortar(modoCorte) {
+        if (flujo.cortado || !controlador) return;
+        flujo.cortado = true;
+        corte.cortado = true;
+        if (modoCorte === 'eof') controlador.close();
+        else controlador.error(new TypeError('network error'));
+      },
+      liberarServidor() {
+        controlReal.abort();
+      },
+    };
+    const cuerpo = new ReadableStream({
+      start(c) {
+        controlador = c;
+      },
+      async pull(c) {
+        try {
+          const { value, done } = await lectorReal.read();
+          if (flujo.cortado) return;
+          if (done) {
+            flujo.cortado = true;
+            c.close();
+          } else c.enqueue(value);
+        } catch (error) {
+          if (flujo.cortado) return;
+          flujo.cortado = true;
+          c.error(error);
+        }
+      },
+      cancel() {
+        if (!corte.cortado) controlReal.abort();
+      },
+    });
+    flujosEventos.push(flujo);
+    return new Response(cuerpo, { status: respuesta.status, headers: respuesta.headers });
+  }
+
+  /**
    * @param {string | URL | Request} entrada
    * @param {RequestInit} [opciones]
    */
   function fetchSimulado(entrada, opciones = {}) {
     const destino = new URL(String(entrada), base);
+    if ((opciones.method ?? 'GET') === 'GET' && destino.pathname.endsWith('/eventos')) {
+      return abrirEventosSimulado(destino, opciones);
+    }
     if (opciones.method === 'POST' && destino.pathname.endsWith('/senales')) {
       const senal = JSON.parse(String(opciones.body));
       if (retener(senal)) {
@@ -443,6 +722,8 @@ export function instalarNavegador({ base, url = '/' }) {
 
   const ventana = {
     isSecureContext: true,
+    onpagehide: null,
+    onpageshow: null,
     /**
      * @param {string} tipo
      * @param {(e: unknown) => void} oyente
@@ -453,10 +734,17 @@ export function instalarNavegador({ base, url = '/' }) {
       oyentesVentana.set(tipo, lista);
     },
   };
+  const documento = Object.assign(new DestinoSimulado(), {
+    getElementById: (/** @type {string} */ id) => elementos.get(id) ?? null,
+    visibilityState: 'visible',
+    onfreeze: null,
+    onresume: null,
+    wasDiscarded: false,
+  });
 
   const globales = {
     window: ventana,
-    document: { getElementById: (/** @type {string} */ id) => elementos.get(id) ?? null, visibilityState: 'visible' },
+    document: documento,
     navigator: navegador,
     location: { origin: direccion.origin, search: direccion.search, hash: direccion.hash },
     history: { replaceState() {} },
@@ -521,6 +809,64 @@ export function instalarNavegador({ base, url = '/' }) {
     flujos,
     conexiones,
     retenidas,
+    flujosEventos,
+    aperturasEventos: () => aperturasEventos,
+    aperturasSinBienvenida,
+    /** @param {() => ModoApertura} decision Cómo responden las próximas aperturas SSE. */
+    decidirAperturaEventos(decision) {
+      aperturaEventos = decision;
+    },
+    /**
+     * Pasos que quedan retenidos: createOffer (`oferta`), setRemoteDescription (`remota`), createAnswer
+     * (`respuesta`, E03-R02) y setLocalDescription (`local`, E03-R02).
+     * @param {{ oferta?: boolean, remota?: boolean, respuesta?: boolean, local?: boolean }} pasos
+     */
+    retenerNegociacion(pasos) {
+      retencion.oferta = pasos.oferta ?? false;
+      retencion.remota = pasos.remota ?? false;
+      retencion.respuesta = pasos.respuesta ?? false;
+      retencion.local = pasos.local ?? false;
+    },
+    /** Libera los pasos retenidos y deja de retener. */
+    liberarNegociacion() {
+      retencion.oferta = false;
+      retencion.remota = false;
+      retencion.respuesta = false;
+      retencion.local = false;
+      for (const reanudar of pasosRetenidos.splice(0)) reanudar();
+    },
+    pasosRetenidos: () => pasosRetenidos.length,
+    /**
+     * Libera solo el paso retenido de la posición indicada (0 = el más antiguo), sin dejar de retener (E03-R02).
+     * @param {number} indice
+     */
+    liberarPaso(indice) {
+      const [reanudar] = pasosRetenidos.splice(indice, 1);
+      reanudar?.();
+    },
+    /** @param {boolean} valor Si los contadores de estadísticas de las conexiones crecen entre lecturas. */
+    avanzarMedios(valor) {
+      medios.avanzan = valor;
+      for (const c of conexiones) c.mediosAvanzan = valor;
+    },
+    /**
+     * Emite un evento de la ventana (pagehide, pageshow, online, offline).
+     * @param {string} tipo
+     * @param {Record<string, unknown>} [datos]
+     */
+    emitirVentana(tipo, datos = {}) {
+      for (const oyente of oyentesVentana.get(tipo) ?? []) oyente({ type: tipo, ...datos });
+    },
+    /**
+     * Cambia la visibilidad o emite un evento del documento (visibilitychange, freeze, resume).
+     * @param {string} tipo
+     * @param {'visible' | 'hidden'} [visibilidad]
+     */
+    emitirDocumento(tipo, visibilidad) {
+      if (visibilidad) documento.visibilityState = visibilidad;
+      documento.emitir(tipo);
+    },
+    documento,
     /** @param {(senal: Record<string, any>) => boolean} predicado Señales cuyo POST queda retenido. */
     retenerSenales(predicado) {
       retener = predicado;

@@ -4,7 +4,7 @@
 // ni conexiones; copia solo por acción explícita y alternativa manual. No usa navegador ni dispositivos.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { SDP, conServidor, crearSesionEnPagina, cuenta, emisorConEspectador, esperar, pausa } from './ayudas-cliente.js';
+import { SDP, conServidor, crearSesionEnPagina, cuenta, emisorConEspectador, esperar, pausa, ultimaNegociacion } from './ayudas-cliente.js';
 import { LIMITE_ESTADISTICAS_INFORME_MS } from '../../public/medios.js';
 import { SENUELOS, fetchReal } from './navegador-simulado.js';
 
@@ -89,7 +89,8 @@ test('emisor: informe antes de crear la sesión, con la sesión creada, durante 
     await esperar(() => pagina.texto('estado-medios').includes('activos'), 3000, 'captura activa');
     const espectador = participante(sesion.sesion, sesion.tokenEspectador);
     await esperar(() => cuenta(espectador, 'senal', (d) => d.tipo === 'oferta'), 3000, 'oferta recibida');
-    assert.equal((await espectador.canal.enviar({ tipo: 'respuesta', sdp: SDP })).ok, true);
+    // E03: la respuesta lleva el identificador de negociación de la oferta, como la que envía la página real.
+    assert.equal((await espectador.canal.enviar({ tipo: 'respuesta', sdp: SDP, neg: ultimaNegociacion(espectador) })).ok, true);
     const pc = /** @type {any} */ (pagina.conexiones.at(-1));
     await esperar(() => pc.remoteDescription, 3000, 'respuesta aplicada');
     pc.conectar();
