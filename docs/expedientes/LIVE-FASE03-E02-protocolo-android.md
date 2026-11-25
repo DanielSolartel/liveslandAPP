@@ -10,6 +10,8 @@
 | Issue asociado | [#2, validación del primer directo móvil en Android](https://github.com/DanielSolartel/liveslandAPP/issues/2) |
 | Estado | **Preparado. Pendiente de auditoría y publicación manual.** Los trece casos están **NO EJECUTADOS**: no se ha hecho ninguna prueba en Android ni entre equipos físicos |
 
+> **Referencia posterior.** Este documento conserva el estado de preparación de la v1.3 tal como se redactó el 23-11-2026; no es un registro de ejecución. Los resultados de la validación física, su auditoría y las reservas aceptadas por el promotor están en el [expediente de resultados](LIVE-FASE03-E02-resultados-android.md).
+
 Este protocolo permite que una persona repita, con un teléfono Android real y un equipo con Windows 11, la primera transmisión del [experimento `directo-movil`](../../experimentos/directo-movil/README.md) y la documente. Un teléfono emite y un espectador en Windows recibe. Es una prueba técnica con contenido neutral: sin cuentas, grabación, monedas ni cobros.
 
 **No cierra el Issue #2.** Ese issue pide resultados físicos que solo existen cuando alguien ejecute y registre estos casos, y su cierre depende de la auditoría y de la decisión del usuario.

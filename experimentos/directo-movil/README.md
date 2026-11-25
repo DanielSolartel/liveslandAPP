@@ -101,7 +101,7 @@ La versión del navegador se consulta en `chrome://version`. En PowerShell, si `
 
 ## Contexto seguro y prueba física en Android
 
-Los navegadores solo permiten cámara y micrófono en un **contexto seguro**. Abrir `http://<IP de la LAN>:8787` desde el teléfono **no sirve**: el servidor tampoco lo permite sin HTTPS. Hay dos rutas reproducibles, y ninguna se ha ejecutado todavía:
+Los navegadores solo permiten cámara y micrófono en un **contexto seguro**. Abrir `http://<IP de la LAN>:8787` desde el teléfono **no sirve**: el servidor tampoco lo permite sin HTTPS. Hay dos rutas reproducibles. La ruta A se usó en la validación física de E02 ([resultados](../../docs/expedientes/LIVE-FASE03-E02-resultados-android.md)); la ruta B no se ha ejecutado:
 
 - **A. Loopback con `adb reverse`.** Es la recomendada para empezar.
   1. Activa la depuración USB en el teléfono y conéctalo al equipo, con Android Platform Tools instalado.
@@ -117,7 +117,7 @@ Los navegadores solo permiten cámara y micrófono en un **contexto seguro**. Ab
 
   Que Chrome para Android acepte esa CA es un requisito **por comprobar** en cada equipo.
 
-**Prueba manual siguiente en Android (pendiente).** El procedimiento paso a paso para Windows 11 y PowerShell 5.1, la plantilla de resultados y los problemas frecuentes están en el [protocolo LIVE-FASE03-E02](../../docs/expedientes/LIVE-FASE03-E02-protocolo-android.md). Sus trece casos están **NO EJECUTADOS**. Registra:
+**Prueba manual en Android.** El procedimiento paso a paso para Windows 11 y PowerShell 5.1, la plantilla de resultados y los problemas frecuentes están en el [protocolo LIVE-FASE03-E02](../../docs/expedientes/LIVE-FASE03-E02-protocolo-android.md), que conserva su estado de preparación (v1.3). Sus trece casos se ejecutaron el 23 y 24-11-2026; los resultados, las reservas y los hallazgos están en el [expediente de resultados](../../docs/expedientes/LIVE-FASE03-E02-resultados-android.md). Al repetir la prueba, registra:
 
 - el modelo, la versión de Android y la de Chrome, y la red usada;
 - la concesión o denegación del permiso;
@@ -126,7 +126,7 @@ Los navegadores solo permiten cámara y micrófono en un **contexto seguro**. Ab
 - si al finalizar se apaga el indicador de cámara del sistema;
 - el comportamiento con la página oculta y con la pantalla bloqueada (LIVE-002, prueba 1).
 
-No se ha hecho ninguna prueba en Android. La ruta B (HTTPS en la red local) está documentada, pero **no está validada**.
+La validación física en Android se hizo por la ruta A, con las reservas del [expediente de resultados](../../docs/expedientes/LIVE-FASE03-E02-resultados-android.md). La señalización viajó por USB con `adb reverse` y el audio y el video por WebRTC en red local entre Android y Windows. Resultados con reserva que **no están resueltos**: en segundo plano (unos 30 s) el audio se interrumpió y el video se congeló, con recuperación automática; con la pantalla bloqueada hubo interrupción audiovisual, recuperada al desbloquear. Dos observaciones distintas: (1) al cambiar de Wi-Fi se perdió la **conexión WebRTC**; se finalizó la emisión manualmente y se creó una sesión nueva, sin que se demostrara pérdida de la sesión en el servidor y sin afirmar reconexión automática (OBS-WIFI-01); (2) tras unos 60 s fuera de Chrome se perdió la emisión original, Chrome volvió a la pantalla inicial y hubo que crear otra sesión, con causa técnica indeterminada (AND-09-H02). La ruta B (HTTPS de confianza en la LAN) está documentada, pero **no está validada**.
 
 ## Informe de diagnóstico
 
@@ -235,7 +235,7 @@ Además, el usuario comunicó una diferencia de SHA-256 en `README.md` al valida
 
 ## Pendiente y fuera de alcance
 
-- **Pendiente de este experimento:** la prueba física en Android (ruta A o B, según el [protocolo](../../docs/expedientes/LIVE-FASE03-E02-protocolo-android.md)) y la prueba entre dos equipos de una LAN. Ningún caso del protocolo se ha ejecutado, y los comandos de Windows de esta preparación no se ejecutaron.
+- **Estado de validación de este experimento:** la ruta A (loopback con `adb reverse`) está **validada físicamente con reservas** en Android y Windows ([resultados](../../docs/expedientes/LIVE-FASE03-E02-resultados-android.md)); la ruta B (HTTPS de confianza en la LAN) **no está validada**; y otros escenarios de red, la reconexión y la continuidad audiovisual en segundo plano o con la pantalla bloqueada **no se han validado sistemáticamente** (reservas AND-09-H01, AND-09-H02, AND-10-H01 y OBS-WIFI-01). También queda pendiente la reverificación independiente de la evidencia que no se pudo contrastar. Los comandos de Windows de la preparación de esta entrega no se ejecutaron en la sesión de preparación.
 - **Pendiente de FASE-03**, según el [borrador de LIVE-002](../../docs/expedientes/LIVE-002-alcance-borrador.md):
   - multistream hacia BuzzCast, TikTok Live y Bigo Live desde un solo celular;
   - chat y regalos externos;
